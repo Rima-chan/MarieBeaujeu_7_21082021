@@ -1,0 +1,34 @@
+{
+  "name": "groupomania-intern-network-server",
+  "version": "1.0.0",
+  "description": "HTPP server for API Rest - Intern social network",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rima-chan/MarieBeaujeu_7_21082021.git"
+  },
+  "keywords": [
+    "http",
+    "api",
+    "server",
+    "express"
+  ],
+  "author": "Marie Beaujeu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Rima-chan/MarieBeaujeu_7_21082021/issues"
+  },
+  "homepage": "https://github.com/Rima-chan/MarieBeaujeu_7_21082021#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mysql2": "^2.3.0",
+    "sequelize": "^6.6.5"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.2.0"
+  }
+}
