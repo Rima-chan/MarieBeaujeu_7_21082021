@@ -15,16 +15,17 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: {
           allowNull: false
         }
-      })
+      });
+      models.Publication.hasMany(models.Comment);
     }
   };
   Publication.init({
-    idUSERS: DataTypes.INTEGER,
     title: DataTypes.STRING,
     attachment: DataTypes.STRING,
     comments: DataTypes.INTEGER
   }, {
     sequelize,
+    paranoid: true,
     modelName: 'Publication',
   });
   return Publication;

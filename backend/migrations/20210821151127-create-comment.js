@@ -8,13 +8,25 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      idPUBLICATION: {
+      publicationId: {
         allowNull: false,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Publication',
+          key: 'id'
+        }
       },
-      idUSERS: {
+      userId: {
         allowNull: false,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'User',
+          key: 'id'
+        }
+      },
+      content: {
+        allowNull: false,
+        type: Sequelize.string
       },
       createdAt: {
         allowNull: false,
