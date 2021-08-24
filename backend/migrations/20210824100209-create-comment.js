@@ -8,25 +8,25 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      publicationId: {
-        allowNull: false,
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'Publication',
-          key: 'id'
-        }
-      },
       userId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
-          model: 'User',
-          key: 'id'
+          model:'Users',
+          key:'id'
+        }
+      },
+      publicationId: {
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: {
+          model:'Publications',
+          key:'id'
         }
       },
       content: {
         allowNull: false,
-        type: Sequelize.string
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -34,6 +34,10 @@ module.exports = {
       },
       updatedAt: {
         allowNull: false,
+        type: Sequelize.DATE
+      },
+      deletedAt: {
+        allowNull: true,
         type: Sequelize.DATE
       }
     });

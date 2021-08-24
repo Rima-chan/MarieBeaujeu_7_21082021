@@ -11,38 +11,36 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      // M to M relation : relation bewteen Users and Publications through comments
       models.User.belongsToMany(models.Publication, {
-        through: models.Comments,
+        through: models.Comment,
         foreignKey: 'userId',
         otherKey: 'publicationId',
       });
       models.Publication.belongsToMany(models.User, {
-        through: models.Comments,
+        through: models.Comment,
         foreignKey: 'publicationId',
         otherKey: 'userId',
       });
-      // Make the link between foreing keys and reference tables
-      models.Comment.belongsTo(models.User, {
+      models.Comment.belongsTo(models.User,{
         foreignKey: {
-          allowNull: false
+          allowNull: false,
         }
       });
-      models.Comment.belongsTo(models.Publication, {
+      models.Comment.belongsTo(models.Publication,{
         foreignKey: {
-          allowNull: false
+          allowNull: false,
         }
       });
     }
   };
   Comment.init({
-    publicationId: DataTypes.INTEGER,
     userId: DataTypes.INTEGER,
-    content: DataTypes.STRING,
+    publicationId: DataTypes.INTEGER,
+    content: DataTypes.STRING
   }, {
     sequelize,
-    paranoid: true,
     modelName: 'Comment',
+    paranoid: true,
   });
   return Comment;
 };

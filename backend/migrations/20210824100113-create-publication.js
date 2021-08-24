@@ -12,11 +12,11 @@ module.exports = {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
-          models: 'Users',
+          model:'Users',
           key:'id'
         }
       },
-      title: {
+      content: {
         allowNull: false,
         type: Sequelize.STRING
       },
@@ -25,7 +25,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       comments: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.INTEGER
       },
       createdAt: {
@@ -34,6 +34,10 @@ module.exports = {
       },
       updatedAt: {
         allowNull: false,
+        type: Sequelize.DATE
+      },
+      deletedAt: {
+        allowNull: true,
         type: Sequelize.DATE
       }
     });

@@ -18,14 +18,14 @@ module.exports = (sequelize, DataTypes) => {
   User.init({
     email: DataTypes.STRING,
     password: DataTypes.STRING,
-    username: DataTypes.STRING,
+    userName: DataTypes.STRING,
     service: DataTypes.STRING,
     imageUrl: DataTypes.STRING,
-    isAdmin: DataTypes.BOOLEAN,
+    isAdmin: DataTypes.BOOLEAN
   }, {
     sequelize,
-    paranoid: true,
     modelName: 'User',
+    paranoid: true,
   });
   return User;
 };
