@@ -4,17 +4,19 @@ const path = require('path');
 const bodyParser = require('body-parser');
 
 const userRoutes = require('./routes/user');
+const limiter = require('./middleware/limiter');
 
 const app = express();
 
 //CORS Policy
 app.use(cors());
 
-//Replace BordyParser
+//BordyParser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 
-app.use('/api/users', userRoutes);
+app.use(limiter);
+app.use('/api/users', userRoutes); 
 
 app.get('/', (req, res) => {
     res.setHeader('Content-type', 'text/html');

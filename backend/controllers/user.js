@@ -139,10 +139,15 @@ exports.login = (req, res) => {
                         )
                     });
                 } else {
-                    return res.status(403).json({'error': 'Invalid password ' + errBcrypt});
+                    return res.status(403).json({'error': 'Invalid password : ' + errBcrypt});
                 }
             });
         })
-        .catch()
+        .catch(error => res.status(500).json({error: 'Cannot find user : ' + error}));
 
+}
+
+exports.deleteUser = (req, res) => {
+    // Est-ce qu'on ne devrait pas mieux "cacher" l'id ?
+    const 
 }
