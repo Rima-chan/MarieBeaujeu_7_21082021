@@ -22,7 +22,6 @@ exports.signup = (req,res) => {
     const service = req.body.service;
     const isAdmin = req.body.isAdmin;
     const imageUrl = `${req.protocol}://${req.get('host')}/backend/images/avatar_user.png`;
-    console.log('requete !: ' + req.body);
 
     if (email === '' || username === '' || password === '') {
         return res.status(400).json({'error' : 'Missing parameters'});
@@ -115,7 +114,6 @@ exports.updateProfilInfos = (req, res) => {
                     if (imageUrl != null) {
                         const filename = userFound.imageUrl.split('/images/')[1];
                         if (!filename.includes('avatar')) {
-                            console.log('filename : ' + filename);
                             fs.unlink(`images/${filename}`, (error) => {
                                 if (error) throw error;
                             })
@@ -124,7 +122,6 @@ exports.updateProfilInfos = (req, res) => {
                     }
                     userFound.userName = (username ? username: userFound.userName);
                     userFound.service = (service ? service: userFound.service);
-                    userFound.email = (email ? email: userFound.email);
                     userFound.save();
                     res.status(200).json({'message' : 'Profil successfully updated'});
                 })
@@ -151,6 +148,12 @@ exports.deleteUser = (req, res) => {
     User.findOne({where: {id: userIdToDelete}})
         .then(userFound => {
             if (userFound.id === userToken.userId || userToken.isAdmin === true) {
+                const filename = userFound.imageUrl.split('/images/')[1];
+                    if (!filename.includes('avatar')) {
+                        fs.unlink(`images/${filename}`, (error) => {
+                            if (error) throw error;
+                        })
+                    }
                 User.destroy({
                     where: {id: userIdToDelete},
                     // force: true // A enlever pour la production car permet de garder en mémoire les users

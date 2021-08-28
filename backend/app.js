@@ -4,6 +4,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 
 const userRoutes = require('./routes/user');
+const publicationRoutes = require('./routes/publication');
 const limiter = require('./middleware/limiter');
 
 const app = express();
@@ -25,6 +26,7 @@ app.use(limiter);
 // permet de charger les fiichiers qui soont dans le dossier (path.join permet d'avoir la path complet du dossier)
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/api/users', userRoutes); 
+app.use('/api/publications', publicationRoutes);
 
 app.get('/', (req, res) => {
     res.setHeader('Content-type', 'text/html');
