@@ -36,8 +36,24 @@ exports.createNewComment = (req, res) => {
 exports.updateComment = (req, res) => {
     const commentId = parseInt(req.params.commentId);
     const publicationId = parseInt(req.params.publicationId);
+    const newContent = req.body.content;
+    const headAuthorization = req.headers.authorization;
+    const userToken = jwtUtils.getUserToken(headAuthorization);
 
-    Publication.findOne
+    Comment.findOne({where: {id: commentId}})
+        .then(commentFound => {
+            if(commentFound.userId != userToken.userId) {
+                return res.status(403).json({error: 'Unauthorized user'});
+            }
+            commentFound.update({
+                content: newContent ? newContent : commentFound.content
+            })
+            .then(newComment => {
+                res.status(200).json({commentFound});
+            })
+            .catch(err => res.status(400).json({error: 'Cannot update Comment : ' + err}))
+        })
+        .catch(err => res.status(404).json({error: 'Comment not found'}));
 }
 
 exports.getAllComments = (req, res) => {
