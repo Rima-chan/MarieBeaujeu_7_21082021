@@ -36,6 +36,13 @@ exports.createNewComment = (req, res) => {
         .catch(err => res.status(404).json({error: 'Publication not found : ' + err}))
 }
 
+exports.getOneComment = (req,res) => {
+    const commentId = req.params.commentId;
+    Comment.findOne({where: {id: commentId}})
+        .then(commentFound => res.status(200).json(commentFound))
+        .catch(error => res.status(404).json({error: 'User not find : ' + error}));
+}
+
 exports.updateComment = (req, res) => {
     const commentId = parseInt(req.params.commentId);
     const publicationId = parseInt(req.params.publicationId);
@@ -45,7 +52,7 @@ exports.updateComment = (req, res) => {
 
     Comment.findOne({where: {id: commentId}})
         .then(commentFound => {
-            if(commentFound.userId != userToken.userId) {
+            if(commentFound.UserId != userToken.userId) {
                 return res.status(403).json({error: 'Unauthorized user'});
             }
             commentFound.update({
