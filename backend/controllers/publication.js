@@ -1,10 +1,7 @@
-require('dotenv').config();
-
 const models = require('../models');
 const User = require('../models/index').User;
 const Publication = require('../models/index').Publication;
 const asyncLib = require('async');
-const jwtUtils = require('../utils/jwt.utils');
 const fs = require('fs');
 
 
@@ -15,9 +12,6 @@ exports.createNewPublication = (req, res) => {
     const content = req.body.content;
     const imageUrl = req.file ? `${req.protocol}://${req.get('host')}/backend/images/${req.file.filename}` : null;
     const userId = parseInt(req.body.id);
-    console.log(content);
-    console.log(imageUrl);
-    console.log(typeof(userId));
 
     if (content === '' || imageUrl === null || userId === '') {
         return res.status(400).json({error: 'Missing parameters : '});
@@ -112,7 +106,7 @@ exports.getAllPublications = (req, res) => {
 
     let size = 5;
     if(!isNaN(sizeAsNumber) && sizeAsNumber > 0 && sizeAsNumber < 5) {
-        size = sizeAsNumber
+        size = sizeAsNumber;
     }
     
     Publication.findAndCountAll({

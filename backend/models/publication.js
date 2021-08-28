@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
           allowNull: false
         }
       })
+      models.Publication.hasMany(models.Comment);
     }
   };
   Publication.init({
