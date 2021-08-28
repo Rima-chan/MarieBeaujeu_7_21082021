@@ -41,7 +41,7 @@ exports.getOnePublication = (req, res) => {
 }
 
 exports.updatePublication = (req, res) => {
-    const content = req.body.title;
+    const title = req.body.title;
     const imageUrl = req.file ? `${req.protocol}://${req.get('host')}/backend/images/${req.file.filename}` : null;
     const userId = parseInt(req.body.userId);
     const publicationId = parseInt(req.body.publicationId);
@@ -56,14 +56,15 @@ exports.updatePublication = (req, res) => {
                 } else {
                     if (imageUrl != null) {
                         const filename = publication.attachment.split('/images/')[1];
-                            fs.unlink(`images/${filename}`, (error) => {
-                                    if (error) throw error;
-                            })
-                        publication.attachment = imageUrl;
+                        fs.unlink(`images/${filename}`, (error) => {
+                            if (error) throw error;
+                        });
                     }
-                    publication.title = (content ? content: publication.title);
-                    publication.save();
-                    return res.status(200).json({message: 'Publication successfull udpated'});
+                    publication.update({
+                        imageUrl: (imageUrl ? imageUrl: publication.imageUrl),
+                        title: (title ? title : publication.title)
+                    })
+                    return res.status(200).json({publication});
                 }
             })
             .catch(err => res.status(500).json( {error: 'Cannot find publication : ' + err}));
