@@ -15,7 +15,7 @@ const createAccountLimiter = rateLimit({
 // Voir si on peut pas mettre interval progressifs entre chaque connexion ?
 const connexionAccountLimiter = rateLimit({
     windowMs: 30000,
-    max: 3,
+    max: 10,
     message: 
         "Too many connexion attempts, please try again after 30s"
 });

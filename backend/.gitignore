@@ -1,2 +1,4 @@
 node_modules
 .dotenv
+images/*
+!images/.gitkeep

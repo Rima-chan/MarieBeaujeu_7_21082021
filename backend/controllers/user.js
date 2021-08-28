@@ -99,40 +99,16 @@ exports.getOneUser = (req, res) => {
         .catch(error => res.status(404).json({error: 'User not find : ' + error}));
 }
 
-exports.updateProfilInfos = async (req, res) => {
-    const email = req.body.email;
-    const password = req.body.password;
+exports.updateProfilInfos = (req, res) => {
     const userId = parseInt(req.body.id);
     const username = req.body.username;
     const service = req.body.service;
     const imageUrl = req.file ? `${req.protocol}://${req.get('host')}/backend/images/${req.file.filename}` : null;
-    console.log("req.file dans controller");
-    console.log(req.file);
-    console.log("req.body dans controller");
-    console.log(req.body);
+    
     // To check if correct user
     const headAuthorization = req.headers.authorization;
     const userToken = jwtUtils.getUserToken(headAuthorization);
 
-    // Gérer avec les promesses pour exdecuter que si à trouvé ?
-    // const usernameAlreadyExist = await User.findOne({where: {userName: username}});
-    // // const emailAlreadyExist = await User.findOne({where: {email: email}});
-    // console.log("check : " + usernameAlreadyExist);
-
-    // if (emailAlreadyExist != null) {
-    //     return res.status(400).json({error: 'Email already taken'});
-    // }
-
-    // if (!EMAIL_REGEX.test(email)) {
-    //     return res.status(400).json({'error': 'email is not valid'});
-    // }
-
-    // if (usernameAlreadyExist != null) {
-    //     return res.status(400).json({error: 'Username already taken please choose another one'});
-    // } 
-    // if (username && (username.length >= 13 || username.length < 4)){
-    //     return res.status(400).json({'error': 'wrong username (must be length 4 - 12)'});
-    // } 
         if (userId === userToken.userId) {
             User.findOne({where: {id: userToken.userId}})
                 .then(userFound => {
@@ -158,88 +134,9 @@ exports.updateProfilInfos = async (req, res) => {
         }
 }
 
-// if (password === '') {
-//     User.findOne({where: {id:userToken.userId}})
-//         .then(userFound => {
-//             userFound.email = (email ? email: userGound.email);
-//             userFound.userName = (username ? username: userFound.userName);
-//             userFound.service =(service ? service: userFound.service);
-//             console.log(userFound);
-//             return res.status(200).json({'message': 'Ok'})
-//         })
-//         .catch(error => res.status(404).json({error: 'User not found : ' + error}));
-// }
+// Est-ce qu'on envoie l'id dans le body ? Ou celui du token suffit ?
+// Si Admin l'id sera différent et le middleware d'auth va stopper le process
 
-// exports.updateProfil = async (req,res) => {
-//     const email = req.body.email;
-//     const password = req.body.password;
-//     const userId = parseInt(req.params.id);
-//     const username = req.body.username;
-//     const service = req.body.service;
-//     // console.log("req body : " + req.body);
-//     // console.log("req file : " + req.file);
-//     // const imageUrl = req.body && req.file ? `${req.protocol}://${req.get('host')}/backend/images${req.file.filename}` : null;
-    
-//     console.log("email : " + email);
-//     // User infos that make the request
-
-//     // try {
-//     //     const usernameAlreadyExist = await User.findOne({where: {username: username}});
-//     //     const emailAlreadyExist = await User.findOne({where: {email: email}});
-//     //     console.log(usernameAlreadyExist);
-//     //     console.log(emailAlreadyExist);
-//     //     if (usernameAlreadyExist) {
-//     //         return res.status(400).json({error: 'Username already taken'});
-//     //     }
-//     //     if (emailAlreadyExist) {
-//     //         return res.status(400).json({error: 'Email already taken'});
-//     //     }
-//     // } catch (error) {
-//     //     console.log("Erreur : " + error);
-//     // }
-//     // If user wants to change email or pseudo : must check that arn't used
-    
-//     const headAuthorization = req.headers.authorization;
-//     const userToken = jwtUtils.getUserToken(headAuthorization);
-//     console.log('user id from token : ' + userToken.userId);
-//     console.log('id from param : ' + userId);
-//     console.log("pass : " + password);
-
-//     if (userToken.userId === userId) {
-//         if (password != '') {
-//             bcrypt.hash(password, SALT_ROUNDS, function(errBcrypt, resBcrypt) {
-//                 User.findOne({where: {id: userId}})
-//                     .then(userFound => {
-//                         userFound.update({
-//                             email: (email ? email : userFound.email),
-//                             password: resBcrypt,
-//                             username: (username ? username : userFound.userName),
-//                             service: (service ? service : userFound.service),
-//                             imageUrl: (imageUrl ? imageUrl : userFound.imageUrl)
-//                         })
-//                     })
-//                     .catch(error => res.status(500).json({error: 'Cannot find user : ' + error}))
-//             });
-//         } else if (password === '') {
-//             User.findOne({where: {id: userId}})
-//                 .then(userFound => {
-//                     userFound.update({
-//                         email: (email ? email : userFound.email),
-//                         password: userFound.password,
-//                         username: (username ? username : userFound.userName),
-//                         service: (service ? service : userFound.service),
-//                         imageUrl: (imageUrl ? imageUrl : userFound.imageUrl)
-//                     })
-//                 })
-//                 .catch(error => res.status(500).json({error: 'Cannot find user : ' + error}))
-//         }
-//     } else {
-//         return res.status(403).json({error: 'Unauthorized request'});
-//     }
-// }
-
-// Dans tous les cas le middleware check si l'user qui envoie la requête à le bon ID (mais obligé d'entrer un Id dans le body)
-// Obligé de savoir si l'user est admin ou pas --> meilleur de passer par token/header ou par infos dans la requete ? 
 exports.deleteUser = (req, res) => {
     // On récupère l'id des paramètres de la page profil qui doit être supprimée
     // On récupère également les infos du Token envoyé par le header (soit par celui qui fait la requête)
@@ -253,9 +150,6 @@ exports.deleteUser = (req, res) => {
     const userToken = jwtUtils.getUserToken(headAuthorization);
     User.findOne({where: {id: userIdToDelete}})
         .then(userFound => {
-            // Soit j'envoie via le front info is Admin mais surement pas secure ?
-            // Soit je trouve isAdmin via le token passé dans les headers ?
-            // Pas redondant avec le middleware auth au niveau du check de l'id ?
             if (userFound.id === userToken.userId || userToken.isAdmin === true) {
                 User.destroy({
                     where: {id: userIdToDelete},
