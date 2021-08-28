@@ -19,14 +19,17 @@ exports.createNewComment = (req, res) => {
 
     Publication.findOne({where: {id: publicationId}})
         .then(publicationFound => {
-            console.log(publicationFound);
             const newComment = Comment.create({
                 UserId: userToken.userId,
                 PublicationId: publicationFound.id,
                 content: content
             })
             .then(newComment => {
-                return res.status(201).json({newComment});
+                console.log(newComment);
+                return res.status(201).json({
+                    message: newComment,
+                    autre: newComment.id,
+                });
             })
             .catch(err => res.status(400).json({error: 'Cannot create comment : ' + err}));
         })
