@@ -7,7 +7,7 @@ const limiter = rateLimit({
 
 const createAccountLimiter = rateLimit({
     windowMs: 60 * 60 * 1000, // 1h window ?
-    max: 5,
+    max: 50,
     message:
         "Too many accounts created from this IP, please try again after an hour"
 });
@@ -15,10 +15,11 @@ const createAccountLimiter = rateLimit({
 // Voir si on peut pas mettre interval progressifs entre chaque connexion ?
 const connexionAccountLimiter = rateLimit({
     windowMs: 30000,
-    max: 10,
+    max: 3,
     message: 
         "Too many connexion attempts, please try again after 30s"
 });
 
+module.exports = limiter;
 module.exports = createAccountLimiter;
 module.exports = connexionAccountLimiter;

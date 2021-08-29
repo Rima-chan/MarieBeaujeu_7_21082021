@@ -8,28 +8,30 @@ const fs = require('fs');
 
 exports.createNewComment = (req, res) => {
     const publicationId = parseInt(req.params.publicationId);
-    console.log(publicationId);
     const content = req.body.content;
     const headAuthorization = req.headers.authorization;
     const userToken = jwtUtils.getUserToken(headAuthorization);
     
     if (content === '' || !publicationId) {
-        return res.status(400).json({error: 'Missing parameters : '});
+        return res.status(400).json({error: 'Missing parameters'});
     } 
 
     Publication.findOne({where: {id: publicationId}})
         .then(publicationFound => {
-            const newComment = Comment.create({
+            Comment.create({
                 UserId: userToken.userId,
                 PublicationId: publicationFound.id,
                 content: content
+            }, {
+                include: [{
+                    model: User,
+                    attributes: ['username', 'imageUrl', 'isAdmin']
+                }]
             })
             .then(newComment => {
-                console.log(newComment);
-                return res.status(201).json({
-                    message: newComment,
-                    autre: newComment.id,
-                });
+                publicationFound.comments ++;
+                publicationFound.save();
+                return res.status(201).json({newComment});
             })
             .catch(err => res.status(400).json({error: 'Cannot create comment : ' + err}));
         })
@@ -38,9 +40,15 @@ exports.createNewComment = (req, res) => {
 
 exports.getOneComment = (req,res) => {
     const commentId = req.params.commentId;
-    Comment.findOne({where: {id: commentId}})
+    Comment.findOne({
+            where: {id: commentId},
+            include: [{
+                model: User,
+                attributes: ['username', 'imageUrl', 'isAdmin']
+            }]
+        })
         .then(commentFound => res.status(200).json(commentFound))
-        .catch(error => res.status(404).json({error: 'User not find : ' + error}));
+        .catch(err => res.status(404).json({error: 'User not find : ' + err}));
 }
 
 exports.updateComment = (req, res) => {
@@ -53,7 +61,7 @@ exports.updateComment = (req, res) => {
     Comment.findOne({where: {id: commentId}})
         .then(commentFound => {
             if(commentFound.UserId != userToken.userId) {
-                return res.status(403).json({error: 'Unauthorized user'});
+                return res.status(401).json({error: 'Unauthorized request'});
             }
             commentFound.update({
                 content: newContent ? newContent : commentFound.content
@@ -63,7 +71,30 @@ exports.updateComment = (req, res) => {
             })
             .catch(err => res.status(400).json({error: 'Cannot update Comment : ' + err}))
         })
-        .catch(err => res.status(404).json({error: 'Comment not found'}));
+        .catch(err => res.status(404).json({error: 'Comment not found : ' + err}));
+}
+
+exports.deleteOneComment = (req, res) => {
+    const commentId = parseInt(req.params.commentId);
+    const publicationId = parseInt(req.params.publicationId);
+    const headAuthorization = req.headers.authorization;
+    const userToken = jwtUtils.getUserToken(headAuthorization);
+    Comment.findOne({where: {id: commentId}})
+        .then(commentFound => {
+            if (userToken.userId === commentFound.UserId || userToken.isAdmin) {
+                Publication.findOne({where: {id: publicationId}})
+                    .then(publicationFound => {
+                        publicationFound.comments--;
+                        publicationFound.save();
+                        Comment.destroy({where: {id: commentId}});    
+                        return res.status(200).json({message: 'Comment succcessfully deleted'});
+                    })
+                    .catch(err => res.status(404).json({error: 'Cannot find publication'}));
+            } else {
+                return res.status(401).json({error: 'Unauthorized request'});
+            }
+        })
+        .catch(err => res.status(404).json({error: 'Cannot find comment : ' + err}));
 }
 
 exports.getAllComments = (req, res) => {
@@ -77,6 +108,10 @@ exports.getAllComments = (req, res) => {
     
     Comment.findAndCountAll({
         where: {publicationId: publicationId},
+        includes: [{
+            model: User,
+            attributes: ['username', 'imageUrl', 'isAdmin']
+        }],
         order: [
             ['createdAt', 'ASC'],
         ],

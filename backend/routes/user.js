@@ -7,8 +7,8 @@ const connexionAccountLimiter = require('../middleware/limiter');
 const createAccountLimiter = require('../middleware/limiter');
 const passValidation = require('../middleware/passValidator');
 
-router.post('/signup', userCtrl.signup);
-router.post('/login', userCtrl.login);
+router.post('/signup', passValidation, createAccountLimiter, userCtrl.signup);
+router.post('/login', connexionAccountLimiter, userCtrl.login);
 router.get('/:id', auth, userCtrl.getOneUser);
 router.get('/', auth, userCtrl.getAllUsers);
 router.put('/:id', auth, multer, userCtrl.updateProfilInfos);

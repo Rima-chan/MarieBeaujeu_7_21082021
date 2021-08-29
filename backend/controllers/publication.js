@@ -1,25 +1,27 @@
-const models = require('../models');
 const User = require('../models/index').User;
 const Publication = require('../models/index').Publication;
+const Comment = require('../models/index').Comment;
 const asyncLib = require('async');
 const fs = require('fs');
+const jwtUtils = require('../utils/jwt.utils');
 
 
 // Toujours même soucis : enregistre l'image même si la publi n'est pas enregistrée dans la BDD
 // --> Avec le front empêcher envoie valeur vide mais jamais sur
 // AU niveau du back : ajouter un middleware mais question du form-data 
 exports.createNewPublication = (req, res) => {
-    const content = req.body.content;
-    const imageUrl = req.file ? `${req.protocol}://${req.get('host')}/backend/images/${req.file.filename}` : null;
-    const userId = parseInt(req.body.id);
+    const title = req.body.title;
+    // Sécurité URL lien ?
+    const imageUrl = req.file ? `${req.protocol}://${req.get('host')}/backend/images/${req.file.filename}` : req.body.imageLink;
+    const userId = parseInt(req.body.userId);
 
-    if (content === '' || imageUrl === null || userId === '') {
+    if (title === '' || imageUrl === null || userId === '') {
         return res.status(400).json({error: 'Missing parameters : '});
     } 
     
     const newPublication = Publication.create({
-        UserId: userId, // Je comprends pas pourquoi il y a une MAJ ?
-        content: content,
+        UserId: userId, 
+        title: title,
         attachment: imageUrl,
         comments: 0
     })
@@ -40,10 +42,11 @@ exports.getOnePublication = (req, res) => {
 }
 
 exports.updatePublication = (req, res) => {
-    const content = req.body.content;
-    const imageUrl = req.file ? `${req.protocol}://${req.get('host')}/backend/images/${req.file.filename}` : null;
+    const title = req.body.title;
+    // Sécurité URL entrée ?
+    const imageUrl = req.file ? `${req.protocol}://${req.get('host')}/backend/images/${req.file.filename}` : req.body.imageLink;
     const userId = parseInt(req.body.userId);
-    const publicationId = parseInt(req.body.publicationId);
+    const publicationId = parseInt(req.params.id);
     const headAuthorization = req.headers.authorization;
     const userToken = jwtUtils.getUserToken(headAuthorization);
 
@@ -51,7 +54,7 @@ exports.updatePublication = (req, res) => {
         Publication.findOne({where: {id: publicationId}})
             .then(publication => {
                 if (userToken.userId != publication.UserId) {
-                    return res.status(403).json({error: 'Unauthroized user'});
+                    return res.status(403).json({error: 'Unauthorized user'});
                 } else {
                     if (imageUrl != null) {
                         const filename = publication.attachment.split('/images/')[1];
@@ -60,14 +63,14 @@ exports.updatePublication = (req, res) => {
                             })
                         publication.attachment = imageUrl;
                     }
-                    publication.content = (content ? content: publication.content);
+                    publication.title = (title ? title: publication.title);
                     publication.save();
-                    return res.status(200).json({message: 'Publication successfull udpated'});
+                    return res.status(200).json({message: 'Publication successfully updated'});
                 }
             })
             .catch(err => res.status(500).json( {error: 'Cannot find publication : ' + err}));
     } else {    
-        return res.status(403).json({error: ' Unauthorized request 2 : '});
+        return res.status(403).json({error: 'Unauthorized user'});
     }
 
 }
@@ -79,20 +82,23 @@ exports.deletePublication = (req, res) => {
     
     Publication.findOne({where: {id: publicationId}})
         .then((publication) => {
-            if (publication.userId === userToken.userId || userToken.isAdmin) {
+            console.log(publication);
+            if (publication.UserId === userToken.userId || userToken.isAdmin) {
                 const filename = publication.attachment.split('/images/')[1];
-                console.log(filename);
-                fs.unlink(`images/${filename}`, (error) => {
+                if (filename) {
+                    fs.unlink(`images/${filename}`, (error) => {
                         if (error) throw error;
-                });
+                    });
+                }
+                // If comments
                 Publication.destroy({where: {id: publication.id}})
                     .then( () => res.status(200).json({message: 'Publication successfully deleted'}))
-                    .catch( err => res.status(400).json({error: 'Cannot delete publication : ' + err}));
+                    .catch(err => res.status(400).json({error: 'Cannot delete publication : ' + err}));
             } else {
-                return res.status(403).json({error: 'Unauthorized request'});
+                return res.status(403).json({error: 'Unauthorized user'});
             }
         })
-        .catch(err => res.status(404).json({error: 'Cannot find publication'}));
+        .catch(err => res.status(404).json({error: 'Cannot find publication : ' + err}));
 }
 
 exports.getAllPublications = (req, res) => {
@@ -117,13 +123,13 @@ exports.getAllPublications = (req, res) => {
         offset: page * size
     })
     .then(publications => {
-        const totalPage = Math.ceil(publications.count / size);
-        if (page >= totalPage) {
-            return res.status(400).json({error: 'Page to higher'});
+        const totalPages = Math.ceil(publications.count / size);
+        if (page >= totalPages) {
+            return res.status(400).json({error: 'Page to higher'}); 
         } else {
             res.status(200).json({
                 publications: publications.rows,
-                totalPages: totalPage
+                totalPages: totalPages
             })
         }
     })
