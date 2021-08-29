@@ -1,6 +1,7 @@
 const models = require('../models');
 const User = require('../models/index').User;
 const Publication = require('../models/index').Publication;
+const jwtUtils = require('../utils/jwt.utils');
 const asyncLib = require('async');
 const fs = require('fs');
 
@@ -9,9 +10,10 @@ const fs = require('fs');
 // --> Avec le front empêcher envoie valeur vide mais jamais sur
 // AU niveau du back : ajouter un middleware mais question du form-data 
 exports.createNewPublication = (req, res) => {
-    const content = req.body.content;
+    const content = req.body.title;
     const imageUrl = req.file ? `${req.protocol}://${req.get('host')}/backend/images/${req.file.filename}` : null;
-    const userId = parseInt(req.body.id);
+    const userId = parseInt(req.body.userId);
+
 
     if (content === '' || imageUrl === null || userId === '') {
         return res.status(400).json({error: 'Missing parameters : '});
@@ -19,7 +21,7 @@ exports.createNewPublication = (req, res) => {
     
     const newPublication = Publication.create({
         UserId: userId, // Je comprends pas pourquoi il y a une MAJ ?
-        content: content,
+        title: content,
         attachment: imageUrl,
         comments: 0
     })
@@ -40,7 +42,7 @@ exports.getOnePublication = (req, res) => {
 }
 
 exports.updatePublication = (req, res) => {
-    const content = req.body.content;
+    const title = req.body.title;
     const imageUrl = req.file ? `${req.protocol}://${req.get('host')}/backend/images/${req.file.filename}` : null;
     const userId = parseInt(req.body.userId);
     const publicationId = parseInt(req.body.publicationId);
@@ -55,14 +57,16 @@ exports.updatePublication = (req, res) => {
                 } else {
                     if (imageUrl != null) {
                         const filename = publication.attachment.split('/images/')[1];
-                            fs.unlink(`images/${filename}`, (error) => {
-                                    if (error) throw error;
-                            })
-                        publication.attachment = imageUrl;
+
+                        fs.unlink(`images/${filename}`, (error) => {
+                            if (error) throw error;
+                        });
                     }
-                    publication.content = (content ? content: publication.content);
-                    publication.save();
-                    return res.status(200).json({message: 'Publication successfull udpated'});
+                    publication.update({
+                        imageUrl: (imageUrl ? imageUrl: publication.imageUrl),
+                        title: (title ? title : publication.title)
+                    })
+                    return res.status(200).json({publication});
                 }
             })
             .catch(err => res.status(500).json( {error: 'Cannot find publication : ' + err}));

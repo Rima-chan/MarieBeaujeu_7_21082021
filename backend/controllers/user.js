@@ -1,4 +1,4 @@
-// Imports
+
 require('dotenv').config();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -45,7 +45,7 @@ exports.signup = (req,res) => {
             bcrypt.hash(password, SALT_ROUNDS, (err, hash) => {
                 const newUser = User.create({
                     email: email,
-                    userName: username,
+                    username: username,
                     password: hash,
                     service: service,
                     imageUrl: imageUrl,
@@ -99,7 +99,8 @@ exports.getOneUser = (req, res) => {
 }
 
 exports.updateProfilInfos = (req, res) => {
-    const userId = parseInt(req.body.id);
+
+    const userId = parseInt(req.body.userId);
     const username = req.body.username;
     const service = req.body.service;
     const imageUrl = req.file ? `${req.protocol}://${req.get('host')}/backend/images/${req.file.filename}` : null;
@@ -120,7 +121,8 @@ exports.updateProfilInfos = (req, res) => {
                         }
                         userFound.imageUrl = imageUrl;
                     }
-                    userFound.userName = (username ? username: userFound.userName);
+
+                    userFound.username = (username ? username: userFound.username);
                     userFound.service = (service ? service: userFound.service);
                     userFound.save();
                     res.status(200).json({'message' : 'Profil successfully updated'});
@@ -147,7 +149,8 @@ exports.deleteUser = (req, res) => {
     const userToken = jwtUtils.getUserToken(headAuthorization);
     User.findOne({where: {id: userIdToDelete}})
         .then(userFound => {
-            if (userFound.id === userToken.userId || userToken.isAdmin === true) {
+
+            if (userFound.id === userToken.userId || userToken.isAdmin) {
                 const filename = userFound.imageUrl.split('/images/')[1];
                     if (!filename.includes('avatar')) {
                         fs.unlink(`images/${filename}`, (error) => {

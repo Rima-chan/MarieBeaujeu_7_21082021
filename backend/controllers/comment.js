@@ -19,28 +19,19 @@ exports.createNewComment = (req, res) => {
 
     Publication.findOne({where: {id: publicationId}})
         .then(publicationFound => {
-            const newComment = Comment.create({
+            console.log(publicationFound);
+            Comment.create({
                 UserId: userToken.userId,
                 PublicationId: publicationFound.id,
-                content: content
+                content: content,
+                
             })
             .then(newComment => {
-                console.log(newComment);
-                return res.status(201).json({
-                    message: newComment,
-                    autre: newComment.id,
-                });
+                return res.status(201).json({newComment});
             })
             .catch(err => res.status(400).json({error: 'Cannot create comment : ' + err}));
         })
         .catch(err => res.status(404).json({error: 'Publication not found : ' + err}))
-}
-
-exports.getOneComment = (req,res) => {
-    const commentId = req.params.commentId;
-    Comment.findOne({where: {id: commentId}})
-        .then(commentFound => res.status(200).json(commentFound))
-        .catch(error => res.status(404).json({error: 'User not find : ' + error}));
 }
 
 exports.updateComment = (req, res) => {
@@ -49,6 +40,7 @@ exports.updateComment = (req, res) => {
     const newContent = req.body.content;
     const headAuthorization = req.headers.authorization;
     const userToken = jwtUtils.getUserToken(headAuthorization);
+    console.log(commentId);
 
     Comment.findOne({where: {id: commentId}})
         .then(commentFound => {
@@ -66,7 +58,21 @@ exports.updateComment = (req, res) => {
         .catch(err => res.status(404).json({error: 'Comment not found'}));
 }
 
-exports.getAllComments = (req, res) => {
+
+exports.getOneComment = (req,res) => {
+    const commentId = parseInt(req.params.commentId);
+    const publicationId = parseInt(req.params.publicationId);
+    console.log(commentId);
+    console.log(publicationId);
+    Comment.findOne({where: {id: commentId}})
+        .then(commentFound => {
+            console.log(commentFound);
+                res.status(200).json({commentFound});
+            })
+            .catch(err => res.status(400).json({error: 'Cannot find Comment : ' + err}));
+}
+
+exports.getAllCommentsPublication = (req, res) => {
     const sizeAsNumber = parseInt(req.query.size);
     const publicationId = parseInt(req.params.publicationId);
 
@@ -76,6 +82,10 @@ exports.getAllComments = (req, res) => {
     }
     
     Comment.findAndCountAll({
+        include: [{
+            model: User,
+            attributes: ['username', 'imageUrl', 'isAdmin']
+        }],
         where: {publicationId: publicationId},
         order: [
             ['createdAt', 'ASC'],

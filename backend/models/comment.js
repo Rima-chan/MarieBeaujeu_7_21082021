@@ -17,19 +17,28 @@ module.exports = (sequelize, DataTypes) => {
       models.Publication.belongsToMany(models.User, {
         through: models.Comment
       });
-      models.Comment.belongsTo(models.User,{
+
+
+      models.Comment.belongsTo(models.User, {
         foreignKey: {
-          allowNull: false,
+          allowNull: false
         }
       });
-      models.Comment.belongsTo(models.Publication,{
+      models.Comment.belongsTo(models.Publication, {
         foreignKey: {
-          allowNull: false,
+          allowNull: false
         }
       });
     }
   };
   Comment.init({
+    // Force the through table to have primary key
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false
+    },
     content: DataTypes.STRING
   }, {
     sequelize,
