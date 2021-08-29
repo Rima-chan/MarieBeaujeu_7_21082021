@@ -31,6 +31,13 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Comment.init({
+    // Force the through table to have primary key
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false
+    },
     content: DataTypes.STRING
   }, {
     sequelize,

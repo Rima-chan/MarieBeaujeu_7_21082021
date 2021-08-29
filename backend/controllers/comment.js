@@ -20,10 +20,11 @@ exports.createNewComment = (req, res) => {
     Publication.findOne({where: {id: publicationId}})
         .then(publicationFound => {
             console.log(publicationFound);
-            const newComment = Comment.create({
+            Comment.create({
                 UserId: userToken.userId,
                 PublicationId: publicationFound.id,
-                content: content
+                content: content,
+                
             })
             .then(newComment => {
                 return res.status(201).json({newComment});
