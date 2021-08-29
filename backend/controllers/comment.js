@@ -40,9 +40,12 @@ exports.updateComment = (req, res) => {
     const headAuthorization = req.headers.authorization;
     const userToken = jwtUtils.getUserToken(headAuthorization);
 
+    console.log(commentId);
+
     Comment.findOne({where: {id: commentId}})
         .then(commentFound => {
-            if(commentFound.userId != userToken.userId) {
+            console.log(commentFound);
+            if(commentFound.UserId != userToken.userId) {
                 return res.status(403).json({error: 'Unauthorized user'});
             }
             commentFound.update({
@@ -56,7 +59,20 @@ exports.updateComment = (req, res) => {
         .catch(err => res.status(404).json({error: 'Comment not found'}));
 }
 
-exports.getAllComments = (req, res) => {
+exports.getOneComment = (req,res) => {
+    const commentId = parseInt(req.params.commentId);
+    const publicationId = parseInt(req.params.publicationId);
+    console.log(commentId);
+    console.log(publicationId);
+    Comment.findOne({where: {id: commentId}})
+        .then(commentFound => {
+            console.log(commentFound);
+                res.status(200).json({commentFound});
+            })
+            .catch(err => res.status(400).json({error: 'Cannot find Comment : ' + err}));
+}
+
+exports.getAllCommentsPublication = (req, res) => {
     const sizeAsNumber = parseInt(req.query.size);
     const publicationId = parseInt(req.params.publicationId);
 
@@ -66,6 +82,10 @@ exports.getAllComments = (req, res) => {
     }
     
     Comment.findAndCountAll({
+        include: [{
+            model: User,
+            attributes: ['username', 'imageUrl', 'isAdmin']
+        }],
         where: {publicationId: publicationId},
         order: [
             ['createdAt', 'ASC'],
