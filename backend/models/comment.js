@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
         through: models.Comment
       });
 
+
       models.Comment.belongsTo(models.User, {
         foreignKey: {
           allowNull: false

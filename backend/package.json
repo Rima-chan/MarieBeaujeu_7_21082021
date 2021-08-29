@@ -1,8 +1,28 @@
 {
-  "name": "groupomania-network-server",
+  "name": "groupomania-intern-network-server",
   "version": "1.0.0",
-  "description": "server http pour API rest",
+  "description": "HTPP server for API Rest - Intern social network",
   "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rima-chan/MarieBeaujeu_7_21082021.git"
+  },
+  "keywords": [
+    "http",
+    "api",
+    "server",
+    "express"
+  ],
+  "author": "Marie Beaujeu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Rima-chan/MarieBeaujeu_7_21082021/issues"
+  },
+  "homepage": "https://github.com/Rima-chan/MarieBeaujeu_7_21082021#readme",
   "dependencies": {
     "async": "^3.2.1",
     "bcrypt": "^5.0.1",
@@ -23,13 +43,5 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
-  },
-  "keywords": [
-    "http",
-    "api",
-    "rest",
-    "server"
-  ],
-  "author": "Marie Beaujeu",
-  "license": "ISC"
+  }
 }

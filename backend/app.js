@@ -27,8 +27,8 @@ app.use(express.json());
 // })
 // permet de charger les fiichiers qui soont dans le dossier (path.join permet d'avoir la path complet du dossier)
 app.use('/images', express.static(path.join(__dirname, 'images')));
-app.use('/api/users', userRoutes); 
-app.use('/api/publications', publicationRoutes); 
+app.use('/api/users', userRoutes);
+app.use('/api/publications', publicationRoutes);
 app.use('/api/publications', commentRoutes);
 
 app.get('/', (req, res) => {

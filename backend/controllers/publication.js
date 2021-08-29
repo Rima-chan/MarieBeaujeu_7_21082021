@@ -14,6 +14,7 @@ exports.createNewPublication = (req, res) => {
     const imageUrl = req.file ? `${req.protocol}://${req.get('host')}/backend/images/${req.file.filename}` : null;
     const userId = parseInt(req.body.userId);
 
+
     if (content === '' || imageUrl === null || userId === '') {
         return res.status(400).json({error: 'Missing parameters : '});
     } 
@@ -56,6 +57,7 @@ exports.updatePublication = (req, res) => {
                 } else {
                     if (imageUrl != null) {
                         const filename = publication.attachment.split('/images/')[1];
+
                         fs.unlink(`images/${filename}`, (error) => {
                             if (error) throw error;
                         });

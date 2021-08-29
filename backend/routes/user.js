@@ -3,6 +3,8 @@ const router = express.Router();
 const userCtrl = require('../controllers/user');
 const auth = require('../middleware/auth');
 const multer = require('../middleware/multer-config');
+const connexionAccountLimiter = require('../middleware/limiter');
+const createAccountLimiter = require('../middleware/limiter');
 const passValidation = require('../middleware/passValidator');
 
 router.post('/signup', userCtrl.signup);

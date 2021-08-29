@@ -40,12 +40,10 @@ exports.updateComment = (req, res) => {
     const newContent = req.body.content;
     const headAuthorization = req.headers.authorization;
     const userToken = jwtUtils.getUserToken(headAuthorization);
-
     console.log(commentId);
 
     Comment.findOne({where: {id: commentId}})
         .then(commentFound => {
-            console.log(commentFound);
             if(commentFound.UserId != userToken.userId) {
                 return res.status(403).json({error: 'Unauthorized user'});
             }
@@ -59,6 +57,7 @@ exports.updateComment = (req, res) => {
         })
         .catch(err => res.status(404).json({error: 'Comment not found'}));
 }
+
 
 exports.getOneComment = (req,res) => {
     const commentId = parseInt(req.params.commentId);

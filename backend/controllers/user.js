@@ -1,3 +1,4 @@
+
 require('dotenv').config();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -98,6 +99,7 @@ exports.getOneUser = (req, res) => {
 }
 
 exports.updateProfilInfos = (req, res) => {
+
     const userId = parseInt(req.body.userId);
     const username = req.body.username;
     const service = req.body.service;
@@ -119,6 +121,7 @@ exports.updateProfilInfos = (req, res) => {
                         }
                         userFound.imageUrl = imageUrl;
                     }
+
                     userFound.username = (username ? username: userFound.username);
                     userFound.service = (service ? service: userFound.service);
                     userFound.save();
@@ -146,6 +149,7 @@ exports.deleteUser = (req, res) => {
     const userToken = jwtUtils.getUserToken(headAuthorization);
     User.findOne({where: {id: userIdToDelete}})
         .then(userFound => {
+
             if (userFound.id === userToken.userId || userToken.isAdmin) {
                 const filename = userFound.imageUrl.split('/images/')[1];
                     if (!filename.includes('avatar')) {

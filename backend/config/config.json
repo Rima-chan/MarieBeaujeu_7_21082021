@@ -4,7 +4,6 @@
     "password": "Hdai7askzo0lqajyz37xna",
     "database": "database_development_groupomania",
     "host": "127.0.0.1",
-    "port": "3306",
     "dialect": "mysql"
   },
   "test": {

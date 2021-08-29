@@ -15,4 +15,4 @@ exports.getUserToken = (authorization) => {
         }
     }
     return userToken;
-}
+

@@ -1,79 +1,22 @@
-const models = require('../models');
-const User = require('../models/index').User;
-const Publication = require('../models/index').Publication;
-const Comment = require('../models/index').Comment;
-const jwtUtils = require('../utils/jwt.utils');
-const asyncLib = require('async');
-const fs = require('fs');
 
-exports.createNewComment = (req, res) => {
-    const publicationId = parseInt(req.params.publicationId);
-    console.log(publicationId);
-    const content = req.body.content;
-    const headAuthorization = req.headers.authorization;
-    const userToken = jwtUtils.getUserToken(headAuthorization);
-    
-    if (content === '' || !publicationId) {
-        return res.status(400).json({error: 'Missing parameters : '});
-    } 
+const passwordValidator = require('password-validator');
 
-    Publication.findOne({where: {id: publicationId}})
-        .then(publicationFound => {
-            console.log(publicationFound);
-            const newComment = Comment.create({
-                UserId: userToken.userId,
-                PublicationId: publicationFound.id,
-                content: content
-            })
-            .then(newComment => {
-                return res.status(201).json({newComment});
-            })
-            .catch(err => res.status(400).json({error: 'Cannot create comment : ' + err}));
-        })
-        .catch(err => res.status(404).json({error: 'Publication not found : ' + err}))
-}
+let schema = new passwordValidator();
 
-exports.updateComment = (req, res) => {
-    const commentId = parseInt(req.params.commentId);
-    const publicationId = parseInt(req.params.publicationId);
-    const newContent = req.body.content;
-    const headAuthorization = req.headers.authorization;
-    const userToken = jwtUtils.getUserToken(headAuthorization);
+// Add sth to avoid script characters ?
+schema
+    .is().min(8)                                    // Minimum length 8
+    .is().max(100)                                  // Maximum length 100
+    .has().uppercase()                              // Must have uppercase letters
+    .has().lowercase()                              // Must have lowercase letters
+    .has().digits(2)                                // Must have at least 2 digits
+    .has().not().spaces()                           // Should not have spaces
+    .is().not().oneOf(['Passw0rd', 'Password123', 'mdp123', 'azerty123']); // Blacklist these values
 
-    Comment.findOne({where: {id: commentId}})
-        .then(commentFound => {
-            if(commentFound.userId != userToken.userId) {
-                return res.status(403).json({error: 'Unauthorized user'});
-            }
-            commentFound.update({
-                content: newContent ? newContent : commentFound.content
-            })
-            .then(newComment => {
-                res.status(200).json({commentFound});
-            })
-            .catch(err => res.status(400).json({error: 'Cannot update Comment : ' + err}))
-        })
-        .catch(err => res.status(404).json({error: 'Comment not found'}));
-}
-
-exports.getAllComments = (req, res) => {
-    const sizeAsNumber = parseInt(req.query.size);
-    const publicationId = parseInt(req.params.publicationId);
-
-    let size = 10;
-    if(!isNaN(sizeAsNumber) && sizeAsNumber > 0 && sizeAsNumber < 10) {
-        size = sizeAsNumber;
+module.exports = (req, res, next) => {
+    if (!schema.validate(req.body.password)) {
+        res.status(401).json({error: 'Mot de passe faible !'}); // More details ?
+    } else {
+        next();
     }
-    
-    Comment.findAndCountAll({
-        where: {publicationId: publicationId},
-        order: [
-            ['createdAt', 'ASC'],
-        ],
-        limit: size
-    })
-    .then(comments => {
-        res.status(200).json({comments});
-    })
-    .catch(err => res.status(400).json({error: 'There are no comments for this publication : ' + err}));
 }
