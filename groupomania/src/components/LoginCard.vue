@@ -1,6 +1,22 @@
 <template>
-  <div class="Hey">
-    <h1>Hello</h1>
+  <div class="container">
+    <div class="row">
+      <div class="card">
+        <div class="card-header">
+          <ul class="nav nav-pills nav-header-pills">
+            <li class="nav-item">
+              <a href="#" class="nav-link active">Inscription</a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link active">Connexion</a>
+            </li>
+          </ul>
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">Inscrivez-vous !</h3>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 

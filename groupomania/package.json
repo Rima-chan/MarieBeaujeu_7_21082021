@@ -43,7 +43,7 @@
     "rules": {
       "max-len": "off",
       "vue/max-len": [
-        "error",  
+        "error",
         {
           "code": 120,
           "template": 9000,

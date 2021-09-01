@@ -1,20 +1,24 @@
 <template>
-    <footer>
-        <div class="container">
+    <footer class="w-100 bg-dark text-white">
+        <div class="container d-flex flex-column">
+            <div class="row d-flex justify-content-center">
+                <div class="col-2 mt-3">
+                    <img src="../assets/logo-white.png" alt="Groupomania logo" class="img-fluid py-2 logo">
+                </div>
+            </div>
             <div class="row">
                 <ul class="list-unstyled list-inline text-center mb-3 mt-3">
-                    <li class="list-inline-item text-dark">
-                        <a href="#!" class="text-decoration-none link-dark">A propos</a>
+                    <li class="list-inline-item">
+                        <a href="#!" class="text-decoration-none text-white">Plus d'infos</a>
                     </li>
-                    <li class="list-inline-item h2">.</li>
-                    <li class="list-inline-item text-dark">
-                        <a href="mailto:orinoco@orinoco.fr" class="text-decoration-none link-dark">Contact</a>
-                    </li>
-                    <li class="list-inline-item h2">.</li>
-                    <li class="list-inline-item text-dark">
-                        <a href="#!" class="text-decoration-none link-dark">Conditions Générales de ventes</a>
+                    <li class="list-inline-item">|</li>
+                    <li class="list-inline-item">
+                        <a href="#!" class="text-decoration-none text-white">Signaler un problème</a>
                     </li>
                 </ul>
+            </div>
+            <div class="row">
+
             </div>
         </div>
     </footer>
@@ -27,4 +31,9 @@ export default {
 </script>
 
 <style scoped>
+
+.logo {
+    max-height: 100px;
+}
+
 </style>
