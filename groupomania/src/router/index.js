@@ -6,6 +6,13 @@ const routes = [
     path: '/',
     name: 'Authentification',
     component: () => import(/* webpackChunkName: "about" */ '../views/Authentification.vue'),
+    children: [{
+      path: 'inscription',
+      component: () => import(/* webpackChunkName: "about" */ '../components/SignupForm.vue'),
+    }, {
+      path: 'connexion',
+      component: () => import(/* webpackChunkName: "about" */ '../components/LoginForm.vue'),
+    }],
   },
   {
     path: '/about',

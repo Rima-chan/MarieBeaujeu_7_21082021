@@ -1,19 +1,17 @@
 <template>
   <div class="container">
-    <div class="row">
-      <div class="card">
-        <div class="card-header">
-          <ul class="nav nav-pills nav-header-pills">
+    <div class="row d-flex justify-content-center my-5 mx-1">
+      <div class="card col col-md-4 p-0">
+        <div class="card-body">
+          <ul class="nav nav-tabs justify-content-center">
             <li class="nav-item">
-              <a href="#" class="nav-link active">Inscription</a>
+              <router-link to="/connexion" class="nav-link text-dark px-4">Connexion</router-link>
             </li>
             <li class="nav-item">
-              <a href="#" class="nav-link active">Connexion</a>
+              <router-link to="/inscription" class="nav-link text-dark px-4">Inscription</router-link>
             </li>
           </ul>
-        </div>
-        <div class="card-body">
-          <h3 class="card-title">Inscrivez-vous !</h3>
+          <router-view />
         </div>
       </div>
     </div>
@@ -21,6 +19,7 @@
 </template>
 
 <script>
+
 export default {
   name: 'LoginCard',
 };
@@ -28,18 +27,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
+.router-link-active {
+  background-color: rgba(224, 224, 234, 0.8);
 }
 </style>
