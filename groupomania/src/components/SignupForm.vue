@@ -1,51 +1,60 @@
 <template>
     <div class="row justify-content-center my-4">
-        <form novalidate @submit.prevent="onSubmit" action="">
-            <email-field v-model="email" />
-            <!-- <input-password v-model="password" />
-            <input-username v-model="username" /> -->
-            <!-- <select class="form-select my-3">
-                <option selected>Choisir un service</option>
-                <option value="RH">Ressources Humaines</option>
-                <option value="Web">Web</option>
-                <option value="Commercial">Commercial</option>
-                <option value="Marketing">Marketing</option>
-                <option value="Finance">Finance</option>
-            </select>
-            <div class="form-check d-flex justify-content-start mt-3 mb-5">
-                <input type="checkbox" class="form-check-input" id="isAdminCheckBox">
-                <label class="form-check-label ps-3" for="isAdminCheckBox">Administrateur</label>
-            </div> -->
-            <submit-button>Inscription</submit-button>
+        <form @submit.prevent action="">
+            <email-field v-model="user.email" />
+            <password-field v-model="user.password" />
+            <username-field v-model="user.username" />
+            <service-field v-model="user.service" />
+            <admin-field v-model="user.isAdmin" />
+            <button type="submit" :disabled="isSignupButtonDisabled" @click="signupButtonPressed" class="btn btn-dark">Inscription</button>
+            <br><br>
+            {{ errors }}
         </form>
     </div>
 </template>
 
 <script>
-import { ref } from 'vue';
-import EmailField from './EmailField.vue';
-// import InputPassword from './InputPassword.vue';
-// import InputUsername from './InputUsername.vue';
-import SubmitButton from './SubmitButton.vue';
+// import { ref } from 'vue';
+import { reactive } from 'vue';
+import EmailField from './formFields/EmailField.vue';
+import PasswordField from './formFields/PasswordField.vue';
+// import SubmitButton from './SubmitButton.vue';
+import UsernameField from './formFields/UsernameField.vue';
+import ServiceField from './formFields/ServiceField.vue';
+import AdminField from './formFields/AdminField.vue';
+import useFormValidation from '../features/useFormValidation';
+import useSubmitButtonState from '../features/useSubmitButtonState';
 
 export default {
   name: 'SignupForm',
   components: {
     EmailField,
-    SubmitButton,
+    PasswordField,
+    UsernameField,
+    ServiceField,
+    AdminField,
   },
   setup() {
-    const email = ref('');
-    const password = ref('');
-    const username = ref('');
-    function onSubmit() {
-      console.log('Submitted');
-    }
+    const user = reactive({
+      email: '',
+      password: '',
+      username: '',
+      service: '',
+      isAdmin: '',
+    });
+    const { errors } = useFormValidation();
+    const { isSignupButtonDisabled } = useSubmitButtonState(errors);
+    console.log(isSignupButtonDisabled);
+    const signupButtonPressed = () => {
+      console.log('error form validation : ');
+      console.log(errors);
+      console.log(user);
+    };
     return {
-      email,
-      password,
-      username,
-      onSubmit,
+      user,
+      errors,
+      isSignupButtonDisabled,
+      signupButtonPressed,
     };
   },
 };
