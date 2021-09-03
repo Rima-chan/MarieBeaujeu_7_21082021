@@ -57,7 +57,7 @@ exports.signup = (req,res) => {
         function(userFound, hash, done) {
             User.create({
                 email: email,
-                userName: username,
+                username: username,
                 password: hash,
                 service: service,
                 imageUrl: imageUrl,
