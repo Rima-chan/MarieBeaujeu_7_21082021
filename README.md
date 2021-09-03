@@ -1,10 +1,11 @@
 # MarieBeaujeu_7_21082021
 
+mySQl : create database
+=======
 MAMP server
 
 npm sequelize
-npm sequelize-cli
-
+npx sequelize-cli
 sequelize db:create
 
 if needed add port in config json (3306 for windows and 8089 for mac)

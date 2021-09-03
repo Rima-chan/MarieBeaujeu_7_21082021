@@ -58,10 +58,10 @@ exports.updatePublication = (req, res) => {
                 } else {
                     if (imageUrl != null) {
                         const filename = publication.attachment.split('/images/')[1];
-                            fs.unlink(`images/${filename}`, (error) => {
-                                    if (error) throw error;
-                            })
-                        publication.attachment = imageUrl;
+
+                        fs.unlink(`images/${filename}`, (error) => {
+                            if (error) throw error;
+                        });
                     }
                     publication.title = (title ? title: publication.title);
                     publication.save();

@@ -57,6 +57,7 @@ exports.updateComment = (req, res) => {
     const newContent = req.body.content;
     const headAuthorization = req.headers.authorization;
     const userToken = jwtUtils.getUserToken(headAuthorization);
+    console.log(commentId);
 
     Comment.findOne({where: {id: commentId}})
         .then(commentFound => {
@@ -107,6 +108,10 @@ exports.getAllComments = (req, res) => {
     }
     
     Comment.findAndCountAll({
+        include: [{
+            model: User,
+            attributes: ['username', 'imageUrl', 'isAdmin']
+        }],
         where: {publicationId: publicationId},
         includes: [{
             model: User,

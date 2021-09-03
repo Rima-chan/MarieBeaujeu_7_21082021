@@ -17,14 +17,16 @@ module.exports = (sequelize, DataTypes) => {
       models.Publication.belongsToMany(models.User, {
         through: models.Comment
       });
-      models.Comment.belongsTo(models.User,{
+
+
+      models.Comment.belongsTo(models.User, {
         foreignKey: {
-          allowNull: false,
+          allowNull: false
         }
       });
-      models.Comment.belongsTo(models.Publication,{
+      models.Comment.belongsTo(models.Publication, {
         foreignKey: {
-          allowNull: false,
+          allowNull: false
         }
       });
     }
