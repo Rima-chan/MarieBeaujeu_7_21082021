@@ -1,7 +1,7 @@
 <template>
     <div class="row justify-content-center my-4">
-        <form action="">
-            <input-email v-model="email" />
+        <form novalidate @submit.prevent="onSubmit" action="">
+            <email-field :email="email" />
             <input-password v-model="password" />
             <submit-button>Connexion</submit-button>
         </form>
@@ -9,12 +9,12 @@
 </template>
 
 <script>
-import InputEmail from './InputEmail.vue';
+import EmailField from './EmailField.vue';
 import InputPassword from './InputPassword.vue';
 import SubmitButton from './SubmitButton.vue';
 
 export default {
-  components: { InputEmail, InputPassword, SubmitButton },
+  components: { EmailField, InputPassword, SubmitButton },
   name: 'LoginForm',
 };
 </script>
