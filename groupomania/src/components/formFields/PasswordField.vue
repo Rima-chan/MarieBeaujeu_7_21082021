@@ -1,7 +1,7 @@
 <template>
     <div class="form-group d-flex flex-column my-3">
         <label for="inputPassword" class="align-self-start">Mot de passe :</label>
-        <input type="password" v-model="input" @input="$emit('update:modelValue', $event.target.value)" @keyup="validateInput" class="form-control" id="inputPassword" aria-describedby="Mot de passe">
+        <input type="password" v-model="input" @input="$emit('update:modelValue', $event.target.value)" @keyup="validateInput" class="form-control" id="inputPassword" min-length="8" required aria-describedby="Mot de passe">
         <div v-if="errorMessage" class="invalidField d-inline-flex my-2">{{ errorMessage }}</div>
     </div>
 </template>

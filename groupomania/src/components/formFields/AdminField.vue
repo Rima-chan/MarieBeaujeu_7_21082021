@@ -2,7 +2,6 @@
     <div class="form-check d-flex justify-content-start mt-3 mb-5">
         <input type="checkbox" v-model="input" @input="$emit('update:modelValue', !input)" class="form-check-input" id="isAdminCheckBox">
         <label class="form-check-label ps-3" for="isAdminCheckBox">Administrateur</label>
-        {{ input }}
     </div>
 </template>
 

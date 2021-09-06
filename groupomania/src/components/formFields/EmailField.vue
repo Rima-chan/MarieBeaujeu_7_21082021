@@ -1,7 +1,7 @@
 <template>
     <div class="form-group d-flex flex-column my-3">
         <label for="inputEmail" class="align-self-start mb-2">Email :</label>
-        <input type="text" v-model="input" @input="$emit('update:modelValue', $event.target.value)" @keyup="validateInput" class="form-control" id="inputEmail" aria-describedby="Aide email" placeholder="Exemple@exemple.com" required>
+        <input type="email" v-model="input" @input="$emit('update:modelValue', $event.target.value)" @keyup="validateInput" class="form-control" id="inputEmail" aria-describedby="Aide email" placeholder="Exemple@exemple.com" required>
         <div v-if="errorMessage" class="invalidField d-inline-flex my-2">{{ errorMessage }}</div>
     </div>
 </template>

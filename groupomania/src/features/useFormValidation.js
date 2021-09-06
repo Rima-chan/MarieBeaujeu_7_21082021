@@ -6,7 +6,9 @@ const errors = reactive({});
 // One function per form field to check input validity
 // Return functions and errors
 export default function useFormValidation() {
-  const { isEmpty, minLength, isEmail, isPassword } = useValidators();
+  const {
+    isEmpty, minLength, isEmail, isPassword,
+  } = useValidators();
   const validateEmailField = (fieldName, fieldValue) => {
     errors[fieldName] = !fieldValue ? isEmpty(fieldName, fieldValue) : isEmail(fieldName, fieldValue);
   };

@@ -1,24 +1,20 @@
-// import { computed } from 'vue';
+import { computed } from 'vue';
 
-// export default function useSubmitButtonState(errors) {
-//   const isSignupButtonDisabled = computed(() => {
-//     let disabled = false;
-//     for (const item of errors) {
-//         console.log(item);
-//     }
-//     return disabled;
-//   });
-//   return {
-//     isSignupButtonDisabled,
-//   };
-// }
-
-// Peut-être essayer avec en arg errors, fieldname et chercher avec error[fieldame] != "" ou pas
-export default function useSubmitButtonDisable(errors) {
-  let disabled = true;
-  console.log(errors);
-  disabled = false;
+// Check if user properties are not empty and errors exist
+// Vue JS ? doesn't allow using of for loops in arraw functions
+export default function useSubmitButtonDisable(user, errors) {
+  const isButtonDisabled = computed(() => {
+    let disabled = true;
+    const userPropsToCheck = Object.values(user);
+    const errorsToCheck = Object.values(errors);
+    const isNotEmptyUserInput = userPropsToCheck.every((inputValue) => (inputValue !== ''));
+    const isNotError = errorsToCheck.every((error) => (error === ''));
+    if (isNotEmptyUserInput && isNotError) {
+      disabled = false;
+    }
+    return disabled;
+  });
   return {
-    disabled,
+    isButtonDisabled,
   };
 }
