@@ -1,31 +1,33 @@
-import { ref } from 'vue';
+import { reactive } from 'vue';
+import { toRefs } from '@vue/reactivity';
 import axios from 'axios';
 import useApiGenerator from './useApiUrlGenerator';
 
 export default function useFetchPost(ApiName, dataToSend) {
-  const data = ref(null);
-  const response = ref(null);
-  const error = ref(null);
-  const loading = ref(false);
+  const state = reactive({
+    response: [],
+    status: null,
+    data: {},
+    error: null,
+    loading: true,
+  });
   const { url } = useApiGenerator(ApiName);
   const fetch = async () => {
-    loading.value = true;
     try {
       const result = await axios.post(url, dataToSend);
-      response.value = result;
-      data.value = result.data;
+      state.response = result;
+      state.data = result.data;
+      state.status = result.status;
     } catch (e) {
-      error.value = e;
+      state.error = e.response.data.error;
+      state.status = e.response.status;
     } finally {
-      loading.value = false;
+      state.loading = false;
     }
   };
   fetch();
   return {
-    response,
-    error,
-    data,
-    loading,
+    ...toRefs(state),
     fetch,
   };
 }

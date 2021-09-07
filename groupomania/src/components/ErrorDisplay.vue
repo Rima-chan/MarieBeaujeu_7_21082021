@@ -1,0 +1,20 @@
+<template>
+    <div>
+      <div v-if="isError" v-bind:class="[status === 409 ? 'alert-danger' : 'alert-primary']" class="alert" role="alert">{{ error }}</div>
+    </div>
+</template>
+
+<script>
+export default {
+  name: 'ErrorDisplay',
+  props: {
+    isError: Boolean,
+    status: Number,
+    error: String,
+  },
+};
+</script>
+
+<style scoped>
+
+</style>

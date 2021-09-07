@@ -1,20 +1,25 @@
 <template>
     <div class="row justify-content-center my-4">
-        <form @submit.prevent method="post" enctype="application/x-www-form-urlencoded">
+        <form @submit.prevent method="post" v-if="status != 201" enctype="application/x-www-form-urlencoded">
             <email-field v-model="user.email" />
             <password-field v-model="user.password" />
             <username-field v-model="user.username" />
             <service-field v-model="user.service" />
             <admin-field v-model="user.isAdmin" />
-            <button type="submit" @click="signupButtonPressed" :disabled="isButtonDisabled" class="btn btn-dark">Inscription</button>
+            <button type="submit" @click="submittedPost" :disabled="isButtonDisabled" class="btn btn-dark">Inscription</button>
             <br><br>
         </form>
+        <!-- <error-display v-if="fetchResponse.error" :error="fetchResponse.error" /> -->
+        <success-display :success="status === 201" :message="validationMessage"/>
+        <error-display :status="status" :isError="status && status != 201" :error="error || errorMessage" />
+        <div>{{ status }}</div>
+        <div>{{ error }}</div>
     </div>
 </template>
 
 <script>
 // import { ref } from 'vue';
-import { reactive } from 'vue';
+import { onMounted, reactive } from 'vue';
 import EmailField from './formFields/EmailField.vue';
 import PasswordField from './formFields/PasswordField.vue';
 // import SubmitButton from './SubmitButton.vue';
@@ -23,7 +28,11 @@ import ServiceField from './formFields/ServiceField.vue';
 import AdminField from './formFields/AdminField.vue';
 import useFormValidation from '../features/useFormValidation';
 import useSubmitButtonState from '../features/useSubmitButtonState';
-import useFetchPost from '../features/useFetch';
+// import useFetchPost from '../features/useFetch';
+import useSubmitAction from '../features/useSubmitAction';
+import ErrorDisplay from './ErrorDisplay.vue';
+import SuccessDisplay from './SuccessDisplay.vue';
+// import ErrorDisplay from './ErrorDisplay.vue';
 
 export default {
   name: 'SignupForm',
@@ -33,6 +42,8 @@ export default {
     UsernameField,
     ServiceField,
     AdminField,
+    ErrorDisplay,
+    SuccessDisplay,
   },
   setup() {
     const user = reactive({
@@ -42,23 +53,26 @@ export default {
       service: '',
       isAdmin: false,
     });
-    const { errors } = useFormValidation(); // 1 cran de retard car c'est lerror du formvalidation et donc Mais C'est good dans les erreurs envoyées
+    const { errors } = useFormValidation();
     const { isButtonDisabled } = useSubmitButtonState(user, errors);
-    const signupButtonPressed = () => {
-      console.log(user);
-      const {
-        response, error, data, loading,
-      } = useFetchPost('users', user);
-      console.log(response);
-      console.log(error);
-      console.log(data);
-      console.log(loading);
-    };
+    const {
+      status, data, error, loading, submittedPost,
+    } = useSubmitAction('users/signup', user);
+    const validationMessage = 'Votre compte à bien été crée !';
+    const errorMessage = status === 409 ? `${error.value}` : 'Oups... Il semblerait qu\'il y ait un problème de notre coté... Vous pouvez signaler les bugs en fin de page ';
+    onMounted(() => console.log('Comp mounted'));
     return {
       user,
       errors,
       isButtonDisabled,
-      signupButtonPressed,
+      submittedPost,
+      status,
+      data,
+      error,
+      errorMessage,
+      // errorStatus,
+      loading,
+      validationMessage,
     };
   },
 };

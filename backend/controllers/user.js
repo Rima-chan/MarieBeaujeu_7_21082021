@@ -50,7 +50,7 @@ exports.signup = (req,res) => {
                     done(null, userFound, hash);
                 })
             } else {
-                return res.status(409).json({error: 'User already exist !'});
+                return res.status(409).json({error: 'L\'email est déjà utilisé !'});
             }
         },
         // Create user in database 
@@ -76,31 +76,6 @@ exports.signup = (req,res) => {
             return res.status(500).json({'error': 'Cannot add user'});
         }
     });
-
-
-    // User.findOne({
-    //     attributes: ['email'],
-    //     where:{email: email}
-    // })
-    // .then(userFound => {
-    //     if(!userFound) {
-    //         bcrypt.hash(password, SALT_ROUNDS, (err, hash) => {
-    //             const newUser = User.create({
-    //                 email: email,
-    //                 userName: username,
-    //                 password: hash,
-    //                 service: service,
-    //                 imageUrl: imageUrl,
-    //                 isAdmin: isAdmin
-    //             })
-    //             .then(newUser => res.status(201).json({'userId': newUser.id}))
-    //             .catch(err => res.status(500).json({'error': 'Cannot add user :' +  err}));
-    //         })
-    //     } else {
-    //         return res.status(409).json({error: 'User already exist !'});
-    //     }
-    // })
-    // .catch(err => res.status(500).json({error: 'Cannot verify user : ' + err}));
 }
 
 exports.login = (req, res) => {
