@@ -26,8 +26,8 @@ exports.signup = (req,res) => {
     }
 
     // Check parameters conformity
-    if (username.length >= 13 || username.length < 4){
-        return res.status(400).json({'error': 'wrong username (must be length 4 - 12)'});
+    if (username.length >= 13 || username.length < 3){
+        return res.status(400).json({'error': 'Le pseudo doit avoir entre 3 et 12 charactères'});
     }
 
     if (!EMAIL_REGEX.test(email)) {
@@ -105,7 +105,7 @@ exports.login = (req, res) => {
                     done(null, userFound, resBcrypt);
                 })
             } else {
-                return res.status(404).json({error: 'User not exits in DB'});
+                return res.status(404).json({error: 'L\'email n\'existe pas'});
             }
         },
         // Check password match
@@ -113,7 +113,7 @@ exports.login = (req, res) => {
             if (resBcrypt) {
                 done(userFound);
             } else {
-                return res.status(403).json({error: 'Invalid password'});
+                return res.status(403).json({error: 'Le Mot de passe est incorrrect'});
             }
         }
         // Returns login infos 
@@ -121,6 +121,7 @@ exports.login = (req, res) => {
         if (userFound) {
             return res.status(200).json({
                 'userId': userFound.id,
+                'isAdmin': userFound.isAdmin,
                 'token': jwt.sign({
                             userId: userFound.id,
                             isAdmin: userFound.isAdmin,

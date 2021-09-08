@@ -1,12 +1,12 @@
 <template>
-    <div v-if="success" class="alert alert-success" role="alert">{{ message }}</div>
+    <div v-if="isSuccess" class="alert alert-success" role="alert">{{ message }}</div>
 </template>
 
 <script>
 export default {
   name: 'SucessDisplay',
   props: {
-    success: Boolean,
+    isSuccess: Boolean,
     message: String,
   },
 };

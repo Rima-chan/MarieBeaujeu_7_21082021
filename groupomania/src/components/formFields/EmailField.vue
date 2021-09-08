@@ -8,19 +8,17 @@
 
 <script>
 import { ref } from 'vue';
-import useFormValidation from '../../features/useFormValidation';
+import useFormValidation from '../../composables/useFormValidation';
 
 export default {
   name: 'EmailField',
   setup() {
-    // Using ref() to make the property reactive
+    // Using ref() to make properties reactive
     const input = ref('');
     const errorMessage = ref('');
-    // Call useFormValidation function and get validateEmailField function and errors variable
-    // by destructuring the returned object on the left
+    // Call useFormValidation function and to get back validateEmailField function and errors reactive object
     const { validateEmailField, errors } = useFormValidation();
-    // Function called once input is changed
-    // Use validateEmailField function called above
+    // Function called once input is changed - Use validateEmailField function called above
     const validateInput = () => {
       validateEmailField('email', input.value);
       errorMessage.value = errors ? errors.email : '';

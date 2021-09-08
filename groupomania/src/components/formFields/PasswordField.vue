@@ -8,7 +8,7 @@
 
 <script>
 import { ref } from 'vue';
-import useFormValidation from '../../features/useFormValidation';
+import useFormValidation from '../../composables/useFormValidation';
 
 export default {
   name: 'PasswordField',

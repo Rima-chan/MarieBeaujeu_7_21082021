@@ -6,34 +6,33 @@
             <username-field v-model="user.username" />
             <service-field v-model="user.service" />
             <admin-field v-model="user.isAdmin" />
-            <button type="submit" @click="submittedPost" :disabled="isButtonDisabled" class="btn btn-dark">Inscription</button>
+            <button type="submit" @click="submittedPost" :disabled="isSignupButtonDisabled" class="btn btn-dark">Inscription</button>
             <br><br>
         </form>
-        <!-- <error-display v-if="fetchResponse.error" :error="fetchResponse.error" /> -->
-        <success-display :success="status === 201" :message="validationMessage"/>
-        <error-display :status="status" :isError="status && status != 201" :error="error || errorMessage" />
-        <div>{{ status }}</div>
-        <div>{{ error }}</div>
+        <success-display :isSuccess="status === 201" :message="validationMessage"/>
+        <error-display :isError="status && status != 201" :status="status" :error="error || errorMessage" />
     </div>
 </template>
 
 <script>
 // import { ref } from 'vue';
-import { onMounted, reactive } from 'vue';
+import { reactive, watch } from 'vue';
+// import { useRouter, onBeforeRouteLeave } from 'vue-router';
 import EmailField from './formFields/EmailField.vue';
 import PasswordField from './formFields/PasswordField.vue';
-// import SubmitButton from './SubmitButton.vue';
 import UsernameField from './formFields/UsernameField.vue';
 import ServiceField from './formFields/ServiceField.vue';
 import AdminField from './formFields/AdminField.vue';
-import useFormValidation from '../features/useFormValidation';
-import useSubmitButtonState from '../features/useSubmitButtonState';
-// import useFetchPost from '../features/useFetch';
-import useSubmitAction from '../features/useSubmitAction';
+import useFormValidation from '../composables/useFormValidation';
+import useSubmitButtonState from '../composables/useSubmitButtonState';
+import useFetchPost from '../composables/useFetch';
 import ErrorDisplay from './ErrorDisplay.vue';
 import SuccessDisplay from './SuccessDisplay.vue';
-// import ErrorDisplay from './ErrorDisplay.vue';
 
+// TODO :
+// onBeforeRouteLeave (msg confirmation) : trouver un moyen de mettre un minuteur sinon redirection directe et msg pas vu
+// useRouter - router.psuh pour rediriger vers une autre page
+// Ameliorer la gestion du message d'erreur : peut-être faire comme le status avec Watch
 export default {
   name: 'SignupForm',
   components: {
@@ -46,6 +45,7 @@ export default {
     SuccessDisplay,
   },
   setup() {
+    // Make a reactive copy of the User object (which recieve user input)
     const user = reactive({
       email: '',
       password: '',
@@ -53,24 +53,37 @@ export default {
       service: '',
       isAdmin: false,
     });
+    // Get back errors from form fields validation function
     const { errors } = useFormValidation();
-    const { isButtonDisabled } = useSubmitButtonState(user, errors);
+    // Return disabled button boolean according to a user object (fields not empty) and errors (empty)
+    const { isSignupButtonDisabled } = useSubmitButtonState(user, errors);
+    // Returns reactives constants from fetch composable (these constants will stock futur fetch result and be used by template)
+    // Also returns fetch function
     const {
-      status, data, error, loading, submittedPost,
-    } = useSubmitAction('users/signup', user);
+      status, data, error, loading, fetch,
+    } = useFetchPost('users/signup', user);
+    // Function called when button is submitted, call fetch function
+    const submittedPost = async () => {
+      fetch();
+    };
+    // Check changes on fetch status and save pseudo to localStorage if status = 201
+    // Use value because status is a reactive object and not a ref
+    watch(() => status.value, (value) => {
+      if (value === 201) {
+        localStorage.setItem('pseudo', user.username);
+      }
+    });
     const validationMessage = 'Votre compte à bien été crée !';
-    const errorMessage = status === 409 ? `${error.value}` : 'Oups... Il semblerait qu\'il y ait un problème de notre coté... Vous pouvez signaler les bugs en fin de page ';
-    onMounted(() => console.log('Comp mounted'));
+    const errorMessage = status === 409 ? `${error.value}` : 'Oups... Il semblerait qu\'il y ait un problème de notre coté... Vous pouvez signaler les bugs en bas de page ';
     return {
       user,
       errors,
-      isButtonDisabled,
+      isSignupButtonDisabled,
       submittedPost,
       status,
       data,
       error,
       errorMessage,
-      // errorStatus,
       loading,
       validationMessage,
     };

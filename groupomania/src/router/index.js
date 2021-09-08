@@ -5,23 +5,32 @@ const routes = [
   {
     path: '/',
     name: 'Authentification',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Authentification.vue'),
+    component: () => import(/* webpackChunkName: "Authentification" */ '../views/Authentification.vue'),
     children: [{
       path: 'inscription',
-      component: () => import(/* webpackChunkName: "about" */ '../components/SignupForm.vue'),
+      component: () => import(/* webpackChunkName: "Inscription" */ '../components/SignupForm.vue'),
     }, {
       path: 'connexion',
-      component: () => import(/* webpackChunkName: "about" */ '../components/LoginForm.vue'),
+      component: () => import(/* webpackChunkName: "Connexion" */ '../components/LoginForm.vue'),
     }],
   },
   {
-    path: '/about',
-    name: 'About',
+    path: '/accueil',
+    name: 'Home',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
+    component: () => import(/* webpackChunkName: "home" */ '../views/HomeView.vue'),
   },
+  {
+    path: '/publications',
+    name: 'Publications',
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import(/* webpackChunkName: "publications" */ '../views/PublicationsView.vue'),
+  },
+
 ];
 
 const router = createRouter({
