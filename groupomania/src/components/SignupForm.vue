@@ -5,7 +5,6 @@
             <password-field v-model="user.password" />
             <username-field v-model="user.username" />
             <service-field v-model="user.service" />
-            <admin-field v-model="user.isAdmin" />
             <button type="submit" @click="submittedPost" :disabled="isSignupButtonDisabled" class="btn btn-dark">Inscription</button>
             <br><br>
         </form>
@@ -22,7 +21,6 @@ import EmailField from './formFields/EmailField.vue';
 import PasswordField from './formFields/PasswordField.vue';
 import UsernameField from './formFields/UsernameField.vue';
 import ServiceField from './formFields/ServiceField.vue';
-import AdminField from './formFields/AdminField.vue';
 import useFormValidation from '../composables/useFormValidation';
 import useSubmitButtonState from '../composables/useSubmitButtonState';
 import useFetchPost from '../composables/useFetch';
@@ -40,7 +38,6 @@ export default {
     PasswordField,
     UsernameField,
     ServiceField,
-    AdminField,
     ErrorDisplay,
     SuccessDisplay,
   },
@@ -51,7 +48,6 @@ export default {
       password: '',
       username: '',
       service: '',
-      isAdmin: false,
     });
     // Get back errors from form fields validation function
     const { errors } = useFormValidation();
@@ -73,7 +69,7 @@ export default {
         localStorage.setItem('pseudo', user.username);
       }
     });
-    const validationMessage = 'Votre compte à bien été crée !';
+    const validationMessage = 'Votre compte a bien été crée !';
     const errorMessage = status === 409 ? `${error.value}` : 'Oups... Il semblerait qu\'il y ait un problème de notre coté... Vous pouvez signaler les bugs en bas de page ';
     return {
       user,

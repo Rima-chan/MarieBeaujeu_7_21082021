@@ -18,8 +18,7 @@ exports.signup = (req,res) => {
     const password = req.body.password;
     const username = req.body.username;
     const service = req.body.service;
-    const isAdmin = req.body.isAdmin;
-    const imageUrl = `${req.protocol}://${req.get('host')}/backend/images/avatar_user.png`;
+    const imageUrl = `${req.protocol}://${req.get('host')}/images/avatar_user.png`;
 
     if (email === '' || username === '' || password === '') {
         return res.status(400).json({'error' : 'Missing parameters'});
@@ -61,7 +60,7 @@ exports.signup = (req,res) => {
                 password: hash,
                 service: service,
                 imageUrl: imageUrl,
-                isAdmin: isAdmin
+                isAdmin: false,
             })
             .then(newUser => {
                 done(newUser);
@@ -90,7 +89,7 @@ exports.login = (req, res) => {
         // Find user in DB
         function(done) {
             User.findOne({
-                attributes: ['id', 'email', 'password', 'isAdmin'],
+                attributes: ['id', 'email', 'password', 'isAdmin', 'imageUrl'],
                 where: {email:email}
             })
             .then(userFound => {
@@ -122,6 +121,7 @@ exports.login = (req, res) => {
             return res.status(200).json({
                 'userId': userFound.id,
                 'isAdmin': userFound.isAdmin,
+                'imageUrl': userFound.imageUrl,
                 'token': jwt.sign({
                             userId: userFound.id,
                             isAdmin: userFound.isAdmin,
@@ -134,27 +134,6 @@ exports.login = (req, res) => {
             return res.status(500).json({error: 'Cannot log user'});
         }
     });
-
-    // User.findOne({where:{email: email}})
-    //     .then(userFound => {
-    //         bcrypt.compare(password, userFound.password, function(errBcrypt, resBcrypt){
-    //             if (resBcrypt) {
-    //                 return res.status(200).json({
-    //                     'userId': userFound.id,
-    //                     'token': jwt.sign({
-    //                         userId: userFound.id,
-    //                         isAdmin: userFound.isAdmin,
-    //                         },
-    //                         process.env.DB_TOKEN,
-    //                         {expiresIn: '8h'}
-    //                     )
-    //                 });
-    //             } else {
-    //                 return res.status(403).json({error: 'Invalid password : ' + errBcrypt});
-    //             }
-    //         });
-    //     })
-    //     .catch(err => res.status(500).json({error: 'Cannot find user : ' + err}));
 }
 
 exports.getOneUser = (req, res) => {
