@@ -1,11 +1,12 @@
 <template>
-    <div class="form-group d-flex flex-column my-3">
+    <div class="flex-grow-1 me-2">
         <label for="publication_title" class="hidden">Ecrivez un titre pour votre publication : </label>
         <textarea
           id="publication_title"
           rows="2"
           wrap="hard"
           max-length="255"
+          style="width:100%"
           placeholder="Partagez-nous quelque chose..."></textarea>
     </div>
 </template>

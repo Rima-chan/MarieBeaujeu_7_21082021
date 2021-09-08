@@ -19,6 +19,7 @@
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vuelidate": "^0.7.6",
+    "vuemoji-picker": "^0.0.7",
     "vuex": "^3.6.2"
   },
   "devDependencies": {
@@ -46,7 +47,8 @@
       "parser": "babel-eslint"
     },
     "rules": {
-      "max-len": "off"
+      "max-len": "off",
+      "no-unused-vars": ["error", { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }]
     }
   },
   "browserslist": [
