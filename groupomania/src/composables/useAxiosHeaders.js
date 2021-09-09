@@ -1,4 +1,7 @@
-export default function useAxiosHeaders(token) {
+const userRegistered = JSON.parse(localStorage.getItem('userRegistered'));
+const userToken = userRegistered.token;
+
+export default function useAxiosHeaders(token = userToken) {
   const basicHeadersConfig = {
     headers: { 'Content-Type': 'application/json' },
   };
@@ -8,7 +11,7 @@ export default function useAxiosHeaders(token) {
       Authorization: `Bearer ${token}`,
     },
   };
-  const AuthHeaders = {
+  const authHeaders = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -16,6 +19,6 @@ export default function useAxiosHeaders(token) {
   return {
     basicHeadersConfig,
     formDataAuthHeaders,
-    AuthHeaders,
+    authHeaders,
   };
 }

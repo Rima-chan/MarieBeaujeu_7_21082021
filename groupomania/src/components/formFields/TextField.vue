@@ -5,6 +5,7 @@
           id="publication_title"
           rows="2"
           wrap="hard"
+          required
           max-length="255"
           style="width:100%"
           placeholder="Partagez-nous quelque chose..."

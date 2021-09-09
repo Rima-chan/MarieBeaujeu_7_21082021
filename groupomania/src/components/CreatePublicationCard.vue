@@ -48,6 +48,7 @@ export default {
     watch(() => image.value, (imageValue) => {
       newPublication.append('imageUrl', imageValue);
     });
+    // TODO : gestion erreur champs vide
     watch(() => title.value, (titleValue) => {
       newPublication.set('title', titleValue);
     });

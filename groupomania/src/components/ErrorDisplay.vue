@@ -13,6 +13,7 @@ export default {
     status: Number,
     error: String,
   },
+  // Faire le setup ?
 };
 </script>
 
