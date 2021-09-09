@@ -23,7 +23,7 @@ import UsernameField from './formFields/UsernameField.vue';
 import ServiceField from './formFields/ServiceField.vue';
 import useFormValidation from '../composables/useFormValidation';
 import useSubmitButtonState from '../composables/useSubmitButtonState';
-import useFetchPost from '../composables/useFetch';
+import useFetchPost from '../composables/useFetchPost';
 import ErrorDisplay from './ErrorDisplay.vue';
 import SuccessDisplay from './SuccessDisplay.vue';
 
@@ -50,7 +50,7 @@ export default {
       service: '',
     });
     // Get back errors from form fields validation function
-    const { errors } = useFormValidation();
+    const { errors } = useFormValidation(); // form field validation ?
     // Return disabled button boolean according to a user object (fields not empty) and errors (empty)
     const { isSignupButtonDisabled } = useSubmitButtonState(user, errors);
     // Returns reactives constants from fetch composable (these constants will stock futur fetch result and be used by template)
@@ -64,6 +64,7 @@ export default {
     };
     // Check changes on fetch status and save pseudo to localStorage if status = 201
     // Use value because status is a reactive object and not a ref
+    // TODO : utiliser le watch status comme le 201 pour déf message d'erreur ?
     watch(() => status.value, (value) => {
       if (value === 201) {
         localStorage.setItem('pseudo', user.username);

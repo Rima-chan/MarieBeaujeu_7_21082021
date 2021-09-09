@@ -5,6 +5,8 @@ const storage = multer.diskStorage({
         callback(null, 'images');
     },
     filename: (req, file, callback) => {
+        console.log('File multer : ');
+        console.log(file);
         const name = file.originalname.split(' ').join('_');
         callback(null, Date.now() + "--" + name);
     }

@@ -3,8 +3,12 @@ import { toRefs } from '@vue/reactivity';
 import axios from 'axios';
 import useApiGenerator from './useApiUrlGenerator';
 
+const basicHeadersConfig = {
+  headers: { 'Content-Type': 'application/json' },
+};
+
 // Define a reactive object to catch fetch result
-export default function useFetchPost(ApiName, dataToSend) {
+export default function useFetchPost(ApiName, dataToSend, config = basicHeadersConfig) {
   const result = reactive({
     response: [],
     status: null,
@@ -17,7 +21,7 @@ export default function useFetchPost(ApiName, dataToSend) {
   // Stock fetch result data in the reactive object created above
   const fetch = async () => {
     try {
-      const response = await axios.post(url, dataToSend);
+      const response = await axios.post(url, dataToSend, config);
       result.response = response;
       result.data = response.data;
       result.status = response.status;

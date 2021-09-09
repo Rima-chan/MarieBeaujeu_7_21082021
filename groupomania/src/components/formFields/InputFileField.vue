@@ -17,32 +17,20 @@
 </template>
 
 <script>
-import { ref } from 'vue';
 
+// TODO : faut-il réduire le type de fihcier img acccepté (jpg, png, jpeg, gif)
 export default {
   name: 'InputFileField',
   setup(props, context) {
-    let imageUrl = ref('');
-    const imagePreviewSrc = ref('');
-    const filename = ref('');
     function onFilePicked(event) {
       // TODO : ajouter des règles de vérifications (Si file alors.., longueur, poids...)
       const file = event.target.files[0];
-      console.log(file);
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        imagePreviewSrc.value = e.target.result;
-      };
-      reader.readAsDataURL(file);
-      filename.value = file.name;
-      imageUrl = file;
-      console.log(imageUrl);
-      context.emit('imagePreviewUrl', imagePreviewSrc.value);
+      if (file) {
+        context.emit('getImageFile', file);
+      }
     }
     return {
       onFilePicked,
-      imageUrl,
-      imagePreviewSrc,
     };
   },
 };

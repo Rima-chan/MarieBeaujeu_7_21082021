@@ -7,7 +7,8 @@
           wrap="hard"
           max-length="255"
           style="width:100%"
-          placeholder="Partagez-nous quelque chose..."></textarea>
+          placeholder="Partagez-nous quelque chose..."
+          @input="$emit('update:modelValue', $event.target.value)"></textarea>
     </div>
 </template>
 

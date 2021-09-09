@@ -12,10 +12,12 @@ const jwtUtils = require('../utils/jwt.utils');
 exports.createNewPublication = (req, res) => {
     const title = req.body.title;
     // Sécurité URL lien ?
-    const imageUrl = req.file ? `${req.protocol}://${req.get('host')}/backend/images/${req.file.filename}` : req.body.imageLink;
+    console.log('File create publi : ');
+    console.log(req.file);
+    const imageUrl = req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : req.body.imageLink;
     const userId = parseInt(req.body.userId);
 
-    if (title === '' || imageUrl === null || userId === '') {
+    if (imageUrl === null || userId === '') {
         return res.status(400).json({error: 'Missing parameters : '});
     } 
     

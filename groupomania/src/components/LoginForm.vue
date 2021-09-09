@@ -18,7 +18,7 @@ import PasswordField from './formFields/PasswordField.vue';
 import ErrorDisplay from './ErrorDisplay.vue';
 import useFormValidation from '../composables/useFormValidation';
 import useSubmitButtonState from '../composables/useSubmitButtonState';
-import useFetchPost from '../composables/useFetch';
+import useFetchPost from '../composables/useFetchPost';
 
 export default {
   name: 'LoginForm',
@@ -38,7 +38,7 @@ export default {
     const {
       status, data, error, loading, fetch,
     } = useFetchPost('users/login', user);
-    const submittedPost = () => {
+    const submittedPost = async () => {
       fetch();
     };
     watch(() => status.value, (value) => {
