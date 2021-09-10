@@ -3,9 +3,9 @@
         <div class="col-12">
             <span class="d-flex align-items-center my-3 mx-1 border-top border-bottom py-2">
                 <i class="fas fa-comment m-0 ps-3 pe-2"></i>
-                <h6 class="m-0">Commenter</h6>
+                <h6 class="m-0">Commentaires</h6>
             </span>
-            <div class="col-12">All comments view</div>
+            <comment-card :postId="newComment.publicationId"/>
             <form @submit.prevent method="post" enctype="application/x-www-form-urlencoded">
                 <div class="d-flex align-items-center">
                 <span class="col-2 p-0">
@@ -24,26 +24,35 @@
                 </span>
                 </div>
             </form>
+            <span v-if="errorMessage" class="invalidField">{{ erroMessage }}</span>
         </div>
     </div>
 </template>
 
 <script>
 import { reactive, toRefs } from 'vue';
+// import { useRouter } from 'vue-router';
+import { ref, watch } from '@vue/runtime-core';
 import CommentField from './formFields/CommentField.vue';
 import useFetchPost from '../composables/useFetchPost';
 import useAxiosHeaders from '../composables/useAxiosHeaders';
+import CommentCard from './CommentCard.vue';
 
 export default {
-  components: { CommentField },
-  name: 'Comments',
+  components: { CommentField, CommentCard },
+  name: 'CommentsDisplay',
+  props: {
+    postId: Number,
+  },
   setup(props) {
+    // const router = useRouter();
+    const errorMessage = ref('');
     const newComment = reactive({
       content: '',
       publicationId: '',
     });
-    const { publi } = toRefs(props);
-    console.log(publi);
+    const { postId } = toRefs(props);
+    newComment.publicationId = postId.value;
     const userInLocalStorage = JSON.parse(localStorage.getItem('userRegistered'));
     const userImageUrl = userInLocalStorage ? userInLocalStorage.imageUrl : '../assets/avatar_user.png';
     const { authHeaders } = useAxiosHeaders();
@@ -51,8 +60,22 @@ export default {
       status, data, error, loading, fetch,
     } = useFetchPost(`publications/${newComment.publicationId}/comments`, newComment, authHeaders);
     const submitted = async () => {
+      if (!newComment.publicationId || !newComment.publicationId) {
+        errorMessage.value = 'Impossible de publier le commentaire';
+      } else {
+        fetch();
+      }
       console.log(newComment);
+      console.log(data);
+      newComment.content = '';
     };
+    watch(() => status.value, (value) => {
+      if (value === 201) {
+        console.log('Comment crée');
+      } else {
+        errorMessage.value = 'Désolé nous n\'avons pas pu poster votre message 😥';
+      }
+    });
     return {
       userImageUrl,
       newComment,
@@ -62,11 +85,15 @@ export default {
       error,
       loading,
       fetch,
+      errorMessage,
     };
   },
 };
 </script>
 
-<style>
-
+<style scoped>
+.invalidField {
+  color: red;
+  font-size: .8rem;
+}
 </style>

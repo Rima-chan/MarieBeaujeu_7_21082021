@@ -9,17 +9,13 @@ const fs = require('fs');
 exports.createNewComment = (req, res) => {
     const publicationId = parseInt(req.params.publicationId);
     const content = req.body.content;
-    const headAuthorization = req.headers.authorization;
-    const userToken = jwtUtils.getUserToken(headAuthorization);
-    
     if (content === '' || !publicationId) {
         return res.status(400).json({error: 'Missing parameters'});
-    } 
-
+    }
     Publication.findOne({where: {id: publicationId}})
         .then(publicationFound => {
             Comment.create({
-                UserId: userToken.userId,
+                UserId: req.user.id,
                 PublicationId: publicationFound.id,
                 content: content
             }, {
@@ -113,17 +109,19 @@ exports.getAllComments = (req, res) => {
             attributes: ['username', 'imageUrl', 'isAdmin']
         }],
         where: {publicationId: publicationId},
-        includes: [{
-            model: User,
-            attributes: ['username', 'imageUrl', 'isAdmin']
-        }],
         order: [
             ['createdAt', 'ASC'],
         ],
         limit: size
     })
     .then(comments => {
-        res.status(200).json({comments});
+        if (comments.rows.length === 0) {
+            return res.status(404).json({error: 'There are no comments'});
+        } else {
+            res.status(200).json({
+                comments: comments.rows
+            });
+        }
     })
-    .catch(err => res.status(400).json({error: 'There are no comments for this publication : ' + err}));
+    .catch(err => res.status(400).json({error: 'Bad request ' + err}));
 }

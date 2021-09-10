@@ -24,6 +24,7 @@ module.exports = async (req, res, next) => {
         if (!user) {
           return res.status(401).json({error: 'User not exists'});
         } else {
+            req.user = user;
             next();
         }
     } catch(error) {

@@ -23,7 +23,7 @@ export default function useFetchGet(ApiName, config) {
         result.status = response.status;
       } catch (e) {
         result.error = e.response.data.error;
-        console.log(e.response.data);
+        console.log(e.response);
         console.log(result.error);
         result.status = e.response.status;
       } finally {

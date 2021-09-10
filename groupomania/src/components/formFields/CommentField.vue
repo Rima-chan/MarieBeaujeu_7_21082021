@@ -3,24 +3,25 @@
     <label for="inputComment"></label>
         <input
           type="text"
-          v-model="input"
           @input="$emit('update:modelValue', $event.target.value)"
+          :value="modelValue"
           class="form-control align-middle" id="inputComment"
           aria-describedby=""
           placeholder="Ecrivez un commentaire..."
-          required>
+          min-length="1">
   </div>
 </template>
 
 <script>
-import { ref } from 'vue';
 
 export default {
   name: 'CommentField',
-  setup() {
-    const input = ref('');
+  props: {
+    modelValue: String,
+  },
+  setup(props) {
     return {
-      input,
+      props,
     };
   },
 };
