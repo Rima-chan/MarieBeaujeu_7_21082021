@@ -6,13 +6,14 @@
             <button type="submit" @click="submittedPost" :disabled="isLoginButtonDisabled" class="btn btn-dark">Connexion</button>
             <br><br>
         </form>
-        <error-display :isError="status && status != 200" :status="status" :error="error" />
+        <error-display :isError="status && status != 200" :status="status" :error="errorMessage" />
     </div>
 </template>
 
 <script>
 import { reactive, watch } from 'vue';
 import { useRouter } from 'vue-router';
+import { ref } from '@vue/runtime-core';
 import EmailField from './formFields/EmailField.vue';
 import PasswordField from './formFields/PasswordField.vue';
 import ErrorDisplay from './ErrorDisplay.vue';
@@ -29,6 +30,7 @@ export default {
   },
   setup() {
     const router = useRouter();
+    const errorMessage = ref('');
     const user = reactive({
       email: '',
       password: '',
@@ -47,10 +49,12 @@ export default {
         localStorage.setItem('xsrfToken', JSON.stringify(xsrfToken.value));
         router.push('/accueil');
       }
+      errorMessage.value = error.value ? `${error.value}` : 'Oups ! Il semblerait qu\'il y ait un soucis... 😥';
     });
     return {
       user,
       errors,
+      errorMessage,
       isLoginButtonDisabled,
       status,
       data,

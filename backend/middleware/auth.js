@@ -6,10 +6,10 @@ module.exports = async (req, res, next) => {
     try {
         const headers = req.headers;
         const cookie = req.headers.cookie;
-        if (!cookie) {
+        const access_token = cookie.split('=')[1];
+        if (!cookie  || !access_token) {
             return res.status(401).json({error: 'Missing token in cookie'});
         }
-        const access_token = cookie.split('=')[1];
         if (!headers || !headers['x-xsrf-token']) {
             return res.status(401).json({error: 'Missing XSRF token in headers'});
         }

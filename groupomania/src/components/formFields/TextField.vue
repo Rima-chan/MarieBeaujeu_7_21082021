@@ -9,6 +9,7 @@
           max-length="255"
           style="width:100%"
           placeholder="Partagez-nous quelque chose..."
+          :value="modelValue"
           @input="$emit('update:modelValue', $event.target.value)"></textarea>
     </div>
 </template>
@@ -17,7 +18,13 @@
 
 export default {
   name: 'TextField',
-  setup() {
+  props: {
+    modelValue: String,
+  },
+  setup(props) {
+    return {
+      props,
+    };
   },
 };
 </script>

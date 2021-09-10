@@ -5,7 +5,6 @@ if (!xsrfToken) {
   console.log('Erreur pas de token xsfr');
 }
 xsrfToken = JSON.parse(xsrfToken);
-console.log(xsrfToken);
 
 export default function useAxiosHeaders(tokenXsrf = xsrfToken) {
   const basicHeadersConfig = {

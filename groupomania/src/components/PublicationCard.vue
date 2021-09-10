@@ -4,34 +4,40 @@
       class="card align-self-center my-4"
       v-for="publication in data.publications"
       :publication="publication"
-      :key="publication.id"
-    >
-      <div class="card-body">
-        <span></span>
-        <div class="card-title">{{ publication.title }}</div>
-        <p class="card-text">
-          <small class="text-muted">Last updated 3 mins ago</small>
-        </p>
+      :key="publication.id" >
+      <div class="card-body text-start">
+        <div class="card-title d-flex align-items-center">
+          <div class="flex-shrink-0">
+            <img :src="publication.User.imageUrl" width="40" height="40" class="img-fluid rounded-circle flex-grow-2" alt="Logo du profil">
+          </div>
+          <span class="flex-grow-1 ms-3">
+            <h6 class="">{{ publication.User.username }}</h6>
+            <small class="text-muted">{{ publication.createdAt.substr(0, 10).split("-").reverse().join("-") }}</small>
+          </span>
+          </div>
+          <p class="card-text">{{ publication.title }}</p>
       </div>
       <img
         :src="publication.attachment"
         alt="Hey"
-        class="display-block card-img-bottom"
-        width="200"
-        height="300"
+        class="display-block card-img-bottom img-fluid publication_image"
       />
+      <comments :publicationId="publication.id" />
     </div>
   </div>
 </template>
-0
+
 <script>
 import { reactive } from '@vue/runtime-core';
 import useFetchGet from '../composables/useFetchGet';
 import useAxiosHeaders from '../composables/useAxiosHeaders';
+import Comments from './CommentsCard.vue';
 
 export default {
+  components: { Comments },
   name: 'PublicationCard',
   setup() {
+    let errorMessage;
     const result = reactive({
       publications: [],
       totalPages: 0,
@@ -43,30 +49,23 @@ export default {
     const {
       status, data, error, loading,
     } = useFetchGet('publications', authHeaders);
-    console.log(data.publications);
-    console.log(error);
-    if (data) {
-      result.publications = data;
-    //   const test = toRef(data.value);
-    //   console.log(test);
-    }
-    // watch(() => status, (statusValue) => {
-    //   if (statusValue === 200) {
-    //     result.publications = data.publications;
-    //     result.totalPages = data.totalPages;
-    //     console.log(result.publications);
-    //   }
-    // });
+    //   errorMessage = 'Aucunes publications recentes... 😴';
+    //   errorMessage = 'La page demandée n\'existe pas 🤷‍♀️';
     return {
       result,
       status,
       data,
       error,
       loading,
+      errorMessage,
     };
   },
 };
 </script>
 
-<style>
+<style scoped>
+.publication_image {
+  max-width: 400px;
+  max-height: 300px;
+}
 </style>

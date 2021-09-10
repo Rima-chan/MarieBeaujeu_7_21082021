@@ -136,7 +136,9 @@ exports.getAllPublications = (req, res) => {
         offset: page * size
     })
     .then(publications => {
-        if(!publications.rows) {
+        console.log(publications.rows.length);
+        console.log(publications);
+        if(publications.rows.length === 0) {
           return res.status(404).json({error: 'No publications !'});
         }
         const totalPages = Math.ceil(publications.count / size);

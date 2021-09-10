@@ -132,7 +132,8 @@ exports.login = (req, res) => {
         );
         res.cookie('access_token', accessToken, {
             httpOnly: true,
-            maxAge: 900000,
+            maxAge: 10800000,
+            // "Secure: true" with https for production
         });
         return res.status(200).json({
             'userId': userFound.id,

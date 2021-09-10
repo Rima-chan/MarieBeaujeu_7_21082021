@@ -9,7 +9,7 @@ export default function useValidator() {
   };
   const isPassword = (fieldName, fieldValue) => {
     const re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
-    return !re.test(fieldValue) ? 'Mot de passe non valide. Doit contenir au moins 8 charactères dont 21majuscule et 1 chiffre' : '';
+    return !re.test(fieldValue) ? 'Mot de passe non valide. Doit contenir au moins 8 charactères dont 1 majuscule et 1 chiffre' : '';
   };
   return {
     isEmpty,
