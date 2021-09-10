@@ -2,6 +2,7 @@
 require('dotenv').config();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const User = require('../models/index').User;
 const asyncLib = require('async');
 const jwtUtils = require('../utils/jwt.utils');
@@ -117,22 +118,29 @@ exports.login = (req, res) => {
         }
         // Returns login infos 
     ], function(userFound) {
-        if (userFound) {
-            return res.status(200).json({
-                'userId': userFound.id,
-                'isAdmin': userFound.isAdmin,
-                'imageUrl': userFound.imageUrl,
-                'token': jwt.sign({
-                            userId: userFound.id,
-                            isAdmin: userFound.isAdmin,
-                            },
-                            process.env.DB_TOKEN,
-                            {expiresIn: '8h'}
-                        )
-                });
-        } else {    
+        if (!userFound) {
             return res.status(500).json({error: 'Cannot log user'});
         }
+        const xsrfToken = crypto.randomBytes(64).toString('hex');
+        const accessToken = jwt.sign({
+            userId: userFound.id,
+            isAdmin: userFound.isAdmin,
+            xsrfToken: xsrfToken,
+            },
+            process.env.DB_TOKEN,
+            {expiresIn: '8h'}
+        );
+        res.cookie('access_token', accessToken, {
+            httpOnly: true,
+            maxAge: 900000,
+        });
+        return res.status(200).json({
+            'userId': userFound.id,
+            'isAdmin': userFound.isAdmin,
+            'imageUrl': userFound.imageUrl,
+            xsrfToken,
+            accessTokenExpiresIn: '8h',
+        });
     });
 }
 

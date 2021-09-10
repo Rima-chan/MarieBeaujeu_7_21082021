@@ -36,7 +36,7 @@ export default {
     const { errors } = useFormValidation();
     const { isLoginButtonDisabled } = useSubmitButtonState(user);
     const {
-      status, data, error, loading, fetch,
+      status, data, xsrfToken, error, loading, fetch,
     } = useFetchPost('users/login', user);
     const submittedPost = async () => {
       fetch();
@@ -44,6 +44,7 @@ export default {
     watch(() => status.value, (value) => {
       if (value === 200) {
         localStorage.setItem('userRegistered', JSON.stringify(data.value));
+        localStorage.setItem('xsrfToken', JSON.stringify(xsrfToken.value));
         router.push('/accueil');
       }
     });
@@ -54,6 +55,7 @@ export default {
       status,
       data,
       error,
+      xsrfToken,
       loading,
       fetch,
       submittedPost,

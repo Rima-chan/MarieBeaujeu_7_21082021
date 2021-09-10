@@ -3,6 +3,7 @@ const cors = require('cors');
 const path = require('path');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
+const cookieParser = require('cookie-parser');
 
 const userRoutes = require('./routes/user');
 const publicationRoutes = require('./routes/publication');
@@ -15,8 +16,27 @@ const app = express();
 // app.use(limiter);
 
 //CORS Policy
-app.use(cors());
+const corsOptions = {
+    //To allow requests from client
+    origin: [
+      "http://localhost:8080",
+      "http://localhost:8081",
+      "http://127.0.0.1",
+    ],
+    credentials: true,
+    exposedHeaders: ["set-cookie"],
+  };
+// app.use(cors({credentials: true, origin: 'http://localhost:8081'}));
+app.use(cors(corsOptions));
 app.use(helmet());
+app.use(cookieParser());
+
+app.use(function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', 'http://localhost:8081');
+    res.header('Access-Control-Allow-Credentials', true);
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    next();
+  });
 
 //BordyParser
 app.use(bodyParser.urlencoded({extended:true}));

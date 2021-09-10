@@ -54,7 +54,7 @@ export default {
       formData.set('title', titleValue);
     });
     formData.append('userId', userRegisteredInLocalSotrage.userId);
-    const { formDataAuthHeaders } = useAxiosHeaders(userRegisteredInLocalSotrage.token);
+    const { formDataAuthHeaders } = useAxiosHeaders();
     const {
       status, data, error, loading, fetch,
     } = useFetchPost('publications', formData, formDataAuthHeaders);
@@ -65,6 +65,8 @@ export default {
       if (value === 201) {
         // context.root('addNewPublication', value);
         console.log('Okkkk');
+        imagePreviewUrl.value = '';
+        title.value = '';
       }
     });
     return {

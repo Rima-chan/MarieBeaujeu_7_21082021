@@ -9,12 +9,14 @@ const basicHeadersConfig = {
 
 // Define a reactive object to catch fetch result
 export default function useFetchPost(ApiName, dataToSend, config = basicHeadersConfig) {
+  axios.defaults.withCredentials = true;
   const result = reactive({
     response: [],
     status: null,
     data: {},
     error: null,
     loading: true,
+    xsrfToken: '',
   });
   // Use a composable function to define api url
   const { url } = useApiGenerator(ApiName);
@@ -24,6 +26,7 @@ export default function useFetchPost(ApiName, dataToSend, config = basicHeadersC
       const response = await axios.post(url, dataToSend, config);
       result.response = response;
       result.data = response.data;
+      result.xsrfToken = response.data.xsrfToken;
       result.status = response.status;
     } catch (e) {
       result.error = e.response.data.error;

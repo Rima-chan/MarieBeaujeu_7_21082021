@@ -4,6 +4,7 @@ import axios from 'axios';
 import useApiGenerator from './useApiUrlGenerator';
 
 export default function useFetchGet(ApiName, config) {
+  axios.defaults.withCredentials = true;
   const result = reactive({
     response: [],
     status: null,
