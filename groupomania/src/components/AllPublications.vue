@@ -5,7 +5,7 @@
             <div class="col-12 d-flex justify-content-center my-2">
                 <create-publication-card />
             </div>
-            <div class="col-12 d-flex flex-column justify-content-center my-2">
+            <div class="col-12 d-flex flex-column align-items-center my-2">
                 <h2 class="col-12 h4">Les dernières publications...</h2>
                 <publication-card />
             </div>

@@ -12,21 +12,19 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       models.User.belongsToMany(models.Publication, {
-        through: models.Comment
+        through: models.Comment,
       });
       models.Publication.belongsToMany(models.User, {
-        through: models.Comment
+        through: models.Comment,
       });
-
-
       models.Comment.belongsTo(models.User, {
         foreignKey: {
-          allowNull: false
+            allowNull: false
         }
       });
       models.Comment.belongsTo(models.Publication, {
         foreignKey: {
-          allowNull: false
+            allowNull: false
         }
       });
     }

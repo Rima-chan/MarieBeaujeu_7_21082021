@@ -12,7 +12,7 @@
                             <text-field v-model="title"/>
                             <input-file-field @getImageFile="displayImagePreview" />
                         </div>
-                        <img :src="ImagePreviewUrl" alt="" id="image" style="width:100%">
+                        <img :src="imagePreviewUrl" alt="" id="image" style="width:100%">
                         <button type="submit" @click="submitted" class="btn btn-outline-success rounded-pill float-end mt-3">Publier</button>
                     </form>
                 </span>
@@ -23,6 +23,7 @@
 
 <script>
 import { ref, watch } from 'vue';
+// import { reactive } from '@vue/runtime-core';
 import InputFileField from './formFields/InputFileField.vue';
 import TextField from './formFields/TextField.vue';
 import useFetchPost from '../composables/useFetchPost';
@@ -32,8 +33,8 @@ export default {
   components: { TextField, InputFileField },
   name: 'NewPublicationCard',
   setup() {
+    const imagePreviewUrl = ref('');
     const errorMessage = ref('');
-    const ImagePreviewUrl = ref(''); // Nom plus explicite ?
     const image = ref('');
     const title = ref('');
     const userRegisteredInLocalSotrage = JSON.parse(localStorage.getItem('userRegistered'));
@@ -41,39 +42,44 @@ export default {
       errorMessage.value = 'Désolé, nous ne pouvons pas publier la publication'; // Ajouter un break ?
     }
     function displayImagePreview(file) {
-      ImagePreviewUrl.value = URL.createObjectURL(file);
+      imagePreviewUrl.value = URL.createObjectURL(file);
       image.value = file;
     }
-    const newPublication = new FormData();
+    const formData = new FormData();
     watch(() => image.value, (imageValue) => {
-      newPublication.append('imageUrl', imageValue);
+      formData.append('imageUrl', imageValue);
     });
     // TODO : gestion erreur champs vide
     watch(() => title.value, (titleValue) => {
-      newPublication.set('title', titleValue);
+      formData.set('title', titleValue);
     });
-    newPublication.append('userId', userRegisteredInLocalSotrage.userId);
+    formData.append('userId', userRegisteredInLocalSotrage.userId);
     const { formDataAuthHeaders } = useAxiosHeaders(userRegisteredInLocalSotrage.token);
     const {
       status, data, error, loading, fetch,
-    } = useFetchPost('publications', newPublication, formDataAuthHeaders);
+    } = useFetchPost('publications', formData, formDataAuthHeaders);
     const submitted = async () => {
       fetch();
-      console.log(error);
     };
+    watch(() => status.value, (value) => {
+      if (value === 201) {
+        // context.root('addNewPublication', value);
+        console.log('Okkkk');
+      }
+    });
     return {
       displayImagePreview,
-      ImagePreviewUrl,
-      newPublication,
+      imagePreviewUrl,
+      formData,
       title,
       image,
       submitted,
+      formDataAuthHeaders,
       status,
-      data,
       error,
       loading,
       fetch,
-      formDataAuthHeaders,
+      data,
     };
   },
 };

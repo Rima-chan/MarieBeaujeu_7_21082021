@@ -1,12 +1,13 @@
 <template>
   <div>
     <div
-      class="card align-self-center mb-5 mt-2"
+      class="card align-self-center my-4"
       v-for="publication in data.publications"
       :publication="publication"
       :key="publication.id"
     >
       <div class="card-body">
+        <span></span>
         <div class="card-title">{{ publication.title }}</div>
         <p class="card-text">
           <small class="text-muted">Last updated 3 mins ago</small>
@@ -45,7 +46,7 @@ export default {
     console.log(data.publications);
     console.log(error);
     if (data) {
-      result.publications = data.value;
+      result.publications = data;
     //   const test = toRef(data.value);
     //   console.log(test);
     }

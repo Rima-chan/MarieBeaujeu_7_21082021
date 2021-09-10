@@ -118,6 +118,17 @@ exports.getAllPublications = (req, res) => {
     }
     
     Publication.findAndCountAll({
+        include: [
+          {
+            model: User,
+            as: 'User',
+            attributes: ['username', 'imageUrl', 'isAdmin']
+          },
+          {
+            model: Comment,
+            as: 'Comments',
+          }
+        ],
         order: [
             ['createdAt', 'DESC'],
         ],
@@ -125,6 +136,9 @@ exports.getAllPublications = (req, res) => {
         offset: page * size
     })
     .then(publications => {
+        if(!publications.rows) {
+          return res.status(404).json({error: 'No publications !'});
+        }
         const totalPages = Math.ceil(publications.count / size);
         if (page >= totalPages) {
             return res.status(400).json({error: 'Page to higher'}); 
