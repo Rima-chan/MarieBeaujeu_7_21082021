@@ -2,22 +2,15 @@
     <div class="row d-flex justify-content-center my-5">
       <div class="col-sm-6 col-md-4 d-flex flex-column">
         <div class="card">
-          <span class="align-self-end mt-2 me-2">
-            <button
-              @click="showForm"
-              class="btn btn-outline-info">
-              <i class="fas fa-pen"></i>
-            </button>
-          </span>
-          <div class="align-self-center rounded-circle bg-info logo_profil mb-3">
+          <div class="align-self-center rounded-circle bg-info logo_profil my-3">
            <img :src="data.imageUrl" class="img-fluid card-img-top rounded-circle" alt="">
           </div>
           <div class="border-top">
             <h5 class="mt-3">{{ data.username }}</h5>
             <p>Service {{ data.service }}</p>
           </div>
-          <div class="mx-3" v-if="true">
-            <update-profil-card />
+          <div class="mx-3">
+            <update-profil-card v-if="userIdRegistered === data.id || isAdmin" />
           </div>
         </div>
       </div>
@@ -30,30 +23,33 @@ import { useRoute } from 'vue-router';
 import useAxiosHeaders from '../composables/useAxiosHeaders';
 import useFetchGet from '../composables/useFetchGet';
 import UpdateProfilCard from './UpdateProfilCard.vue';
+import useUserInfos from '../composables/useUserInfos';
 
 export default {
   components: { UpdateProfilCard },
   name: 'ProfilCard',
   setup() {
+    // Handle navigatipon pages
     const route = useRoute();
     const userId = ref(null);
-    const isDisplay = ref(false);
-    userId.value = route.params.userId;
+    // Get back infos from authentificated user
+    const {
+      userId: userIdRegistered, isAdmin,
+    } = useUserInfos();
+    // Get back infos from profil page
+    userId.value = parseInt(route.params.userId, 10);
+    // Get back authentification headers, reactives data from fetch and fetch function
     const { authHeaders } = useAxiosHeaders();
     const {
       status, data, error, loading,
     } = useFetchGet(`users/${userId.value}`, authHeaders);
-    console.log(data);
-    function showForm() {
-      isDisplay.value = true;
-    }
     return {
       status,
       data,
       error,
       loading,
-      isDisplay,
-      showForm,
+      userIdRegistered,
+      isAdmin,
     };
   },
 };

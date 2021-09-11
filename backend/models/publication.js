@@ -15,9 +15,8 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: {
           allowNull: false,
         },
-        onDelete: 'CASCADE',
       });
-      models.Publication.hasMany(models.Comment);
+      models.Publication.hasMany(models.Comment, { onDelete: 'CASCADE', hooks:true });
     }
   };
   Publication.init({
@@ -27,7 +26,6 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Publication',
-    paranoid: true,
   });
   return Publication;
 };

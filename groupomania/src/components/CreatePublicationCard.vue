@@ -16,7 +16,7 @@
                 <form @submit.prevent method="post" enctype="multipart/form-data">
                   <div class="d-flex mt-2">
                       <text-field v-model="title"/>
-                      <input-file-field @getImageFile="displayImagePreview" inputFieldId="new_publication_file" />
+                      <input-file-field @getImageFile="displayImagePreview" :inputFieldId="new_publication_file" />
                   </div>
                   <img :src="imagePreviewUrl" alt="" id="image" style="width:100%" class="img-fluid">
                   <div class="col-12 d-inline-flex justify-content-between align-items-center mt-2">
@@ -81,8 +81,6 @@ export default {
     };
     watch(() => status.value, (value) => {
       if (value === 201) {
-        console.log('Okkkk');
-        console.log(data);
         imagePreviewUrl.value = '';
         title.value = '';
         validationMessage.value = 'Message publié !🌞';

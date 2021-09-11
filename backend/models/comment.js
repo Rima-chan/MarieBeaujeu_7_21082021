@@ -21,13 +21,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: {
             allowNull: false
         },
-        onDelete: 'CASCADE',
       });
       models.Comment.belongsTo(models.Publication, {
         foreignKey: {
             allowNull: false
         },
-        onDelete: 'CASCADE',
       });
     }
   };
@@ -43,7 +41,6 @@ module.exports = (sequelize, DataTypes) => {
     }, {
     sequelize,
     modelName: 'Comment',
-    paranoid: true,
   });
   return Comment;
 };

@@ -13,7 +13,7 @@
                 <div class="modal-body">
                     <form @submit.prevent method="post" enctype="multipart/form-data">
                       <div class="d-flex mt-2">
-                          <text-field v-model="title" />
+                          <text-field />
                           <label
                             for="publication_file_update"
                             class="btn btn-outline-info border-none rounded-circle"
@@ -26,11 +26,6 @@
                               accept="image/*"
                               @change="onFilePicked">
                           </label>
-                      </div>
-                      <div class="col-12 d-inline-flex justify-content-between align-items-center mt-2">
-                        <span class="col-5">
-                          <span v-if="validationMessage">{{ validationMessage }}</span>
-                        </span>
                       </div>
                   </form>
                   <img :src="displayImagePreview" alt="" id="image" class="img-fluid">

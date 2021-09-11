@@ -52,9 +52,11 @@ export default {
     const {
       status, data, error, loading,
     } = useFetchGet('publications', authHeaders);
-    console.log(data);
-    watch(() => (data.value), (value) => {
-      console.log(value);
+    watch(() => (status.value), (value) => {
+      if (value === 200) {
+        result.publications = data;
+        result.totalPages = data;
+      }
     });
     //   errorMessage = 'Aucunes publications recentes... 😴';
     //   errorMessage = 'La page demandée n\'existe pas 🤷‍♀️';

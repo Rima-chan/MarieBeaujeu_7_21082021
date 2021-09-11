@@ -1,35 +1,37 @@
-import { reactive } from 'vue';
-import { toRefs } from '@vue/reactivity';
+import { reactive, toRefs } from 'vue';
 import axios from 'axios';
 import useApiGenerator from './useApiUrlGenerator';
 
-export default function useFetchGet(ApiName, config) {
+export default function useFetchPut(ApiName, dataToSend, config) {
   axios.defaults.withCredentials = true;
   const result = reactive({
     response: [],
     status: null,
-    data: [],
+    data: {},
     error: null,
     loading: true,
+    xsrfToken: '',
   });
+  // Use a composable function to define api url
   const { url } = useApiGenerator(ApiName);
+  // Stock fetch result data in the reactive object created above
   const fetch = async () => {
     try {
-      const response = await axios.get(url, config);
+      const response = await axios.post(url, dataToSend, config);
       result.response = response;
       result.data = response.data;
+      result.xsrfToken = response.data.xsrfToken;
       result.status = response.status;
-      console.log(response);
     } catch (e) {
       result.error = e.response.data.error;
-      console.log(e.response);
       result.status = e.response.status;
     } finally {
       result.loading = false;
     }
   };
-  fetch();
+  // Return fetch function which will be call later
   return {
     ...toRefs(result),
+    fetch,
   };
 }
