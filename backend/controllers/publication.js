@@ -1,3 +1,4 @@
+require('dotenv').config();
 const User = require('../models/index').User;
 const Publication = require('../models/index').Publication;
 const Comment = require('../models/index').Comment;
@@ -49,13 +50,20 @@ exports.updatePublication = (req, res) => {
     const imageUrl = req.file ? `${req.protocol}://${req.get('host')}/backend/images/${req.file.filename}` : req.body.imageLink;
     const userId = parseInt(req.body.userId);
     const publicationId = parseInt(req.params.id);
-    const headAuthorization = req.headers.authorization;
-    const userToken = jwtUtils.getUserToken(headAuthorization);
+    // const headAuthorization = req.headers.authorization;
+    // const userToken = jwtUtils.getUserToken(headAuthorization);
 
-    if (userToken.userId === userId) {
+    const cookie = req.headers.cookie;
+    const access_token = cookie.split('=')[1];
+    if (!cookie  || !access_token) {
+        return res.status(401).json({error: 'Missing token in cookie'});
+    }
+    const decodedToken = jwt.verify(access_token, process.env.DB_TOKEN);
+
+    if (decodedToken.userId === userId) {
         Publication.findOne({where: {id: publicationId}})
             .then(publication => {
-                if (userToken.userId != publication.UserId) {
+                if (decodedToken.userId != publication.UserId) {
                     return res.status(403).json({error: 'Unauthorized user'});
                 } else {
                     if (imageUrl != null) {
@@ -79,13 +87,20 @@ exports.updatePublication = (req, res) => {
 
 exports.deletePublication = (req, res) => {
     const publicationId = parseInt(req.params.id);
-    const headAuthorization = req.headers.authorization;
-    const userToken = jwtUtils.getUserToken(headAuthorization);
+    // const headAuthorization = req.headers.authorization;
+    // const userToken = jwtUtils.getUserToken(headAuthorization);
+
+    const cookie = req.headers.cookie;
+    const access_token = cookie.split('=')[1];
+    if (!cookie  || !access_token) {
+        return res.status(401).json({error: 'Missing token in cookie'});
+    }
+    const decodedToken = jwt.verify(access_token, process.env.DB_TOKEN);
     
     Publication.findOne({where: {id: publicationId}})
         .then((publication) => {
             console.log(publication);
-            if (publication.UserId === userToken.userId || userToken.isAdmin) {
+            if (publication.UserId === decodedToken.userId || decodedToken.isAdmin) {
                 const filename = publication.attachment.split('/images/')[1];
                 if (filename) {
                     fs.unlink(`images/${filename}`, (error) => {

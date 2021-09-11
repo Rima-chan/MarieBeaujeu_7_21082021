@@ -1,13 +1,13 @@
 <template>
     <span>
         <label
-          for="publication_file"
+          for="inputId"
           class="btn btn-outline-info border-none rounded-circle"
           aria-label="Choisir une image">
             <i class="fas fa-images"></i>
             <input
              type="file"
-             id="publication_file"
+             id="inputId"
              style="display:none"
              accept="image/*"
              @change="onFilePicked">
@@ -17,11 +17,19 @@
 </template>
 
 <script>
+import { ref, toRefs } from '@vue/runtime-core';
 
 // TODO : faut-il réduire le type de fihcier img acccepté (jpg, png, jpeg, gif)
 export default {
   name: 'InputFileField',
+  props: {
+    inputFieldId: String, // ajouter required ?
+  },
   setup(props, context) {
+    const inputId = ref('');
+    const { inputFieldId } = toRefs(props);
+    inputId.value = inputFieldId.value;
+    console.log(inputId);
     function onFilePicked(event) {
       // TODO : ajouter des règles de vérifications (Si file alors.., longueur, poids...)
       const file = event.target.files[0];
@@ -31,6 +39,7 @@ export default {
     }
     return {
       onFilePicked,
+      inputId,
     };
   },
 };

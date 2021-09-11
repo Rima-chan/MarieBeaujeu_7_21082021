@@ -45,6 +45,7 @@ export default {
     };
     watch(() => status.value, (value) => {
       if (value === 200) {
+        console.log('OK');
         localStorage.setItem('userRegistered', JSON.stringify(data.value));
         localStorage.setItem('xsrfToken', JSON.stringify(xsrfToken.value));
         router.push('/accueil');

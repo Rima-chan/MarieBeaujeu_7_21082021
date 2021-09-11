@@ -171,11 +171,18 @@ exports.updateProfilInfos = (req, res) => {
     const imageUrl = req.file ? `${req.protocol}://${req.get('host')}/backend/images/${req.file.filename}` : null;
     
     // To check if correct user
-    const headAuthorization = req.headers.authorization;
-    const userToken = jwtUtils.getUserToken(headAuthorization);
+    // const headAuthorization = req.headers.authorization;
+    // const userToken = jwtUtils.getUserToken(headAuthorization);
 
-    if (userId === userToken.userId) {
-        User.findOne({where: {id: userToken.userId}})
+    const cookie = req.headers.cookie;
+    const access_token = cookie.split('=')[1];
+    if (!cookie  || !access_token) {
+        return res.status(401).json({error: 'Missing token in cookie'});
+    }
+    const decodedToken = jwt.verify(access_token, process.env.DB_TOKEN);
+
+    if (userId === decodedToken.userId) {
+        User.findOne({where: {id: decodedToken.userId}})
             .then(userFound => {
                 if (imageUrl != null) {
                     const filename = userFound.imageUrl.split('/images/')[1];
@@ -202,13 +209,19 @@ exports.updateProfilInfos = (req, res) => {
 
 exports.deleteUser = (req, res) => {
     const userIdToDelete = req.params.id;
-    const headAuthorization = req.headers.authorization;
-    const userToken = jwtUtils.getUserToken(headAuthorization);
-    console.log(userToken);
-    console.log(userToken.iat);
+    // const headAuthorization = req.headers.authorization;
+    // const userToken = jwtUtils.getUserToken(headAuthorization);
+    console.log(req.user);
+    const cookie = req.headers.cookie;
+    const access_token = cookie.split('=')[1];
+    if (!cookie  || !access_token) {
+        return res.status(401).json({error: 'Missing token in cookie'});
+    }
+    const decodedToken = jwt.verify(access_token, process.env.DB_TOKEN);
+
     User.findOne({where: {id: userIdToDelete}})
         .then(userFound => {
-            if (userFound.id === userToken.userId || userToken.isAdmin) {
+            if (userFound.id === decodedToken.userId || decodedToken.isAdmin) {
                 const filename = userFound.imageUrl.split('/images/')[1];
                     if (!filename.includes('avatar')) {
                         fs.unlink(`images/${filename}`, (error) => {

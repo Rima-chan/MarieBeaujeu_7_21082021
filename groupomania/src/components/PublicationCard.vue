@@ -14,9 +14,7 @@
               <h6 class="">{{ publication.User.username }}</h6>
               <small class="text-muted">{{ publication.createdAt.substr(0, 10).split("-").reverse().join("-") }}</small>
             </span>
-            <button type="button" class="btn btn-outline-dark">
-              <i class="fas fa-ellipsis-h"></i>
-            </button>
+            <update-publication-button :content="publication.title" />
           </div>
           <p class="card-text">{{ publication.title }}</p>
       </div>
@@ -31,17 +29,18 @@
 </template>
 
 <script>
-import { reactive, ref } from '@vue/runtime-core';
+import { reactive, watch } from '@vue/runtime-core';
+// import { onMounted } from 'vue';
 import useFetchGet from '../composables/useFetchGet';
 import useAxiosHeaders from '../composables/useAxiosHeaders';
 import CommentsDisplay from './CommentsDisplay.vue';
+import UpdatePublicationButton from './UpdatePublicationCard.vue';
 
 export default {
-  components: { CommentsDisplay },
+  components: { CommentsDisplay, UpdatePublicationButton },
   name: 'PublicationCard',
   setup() {
     let errorMessage;
-    const isExpanded = ref(true);
     const result = reactive({
       publications: [],
       totalPages: 0,
@@ -53,16 +52,13 @@ export default {
     const {
       status, data, error, loading,
     } = useFetchGet('publications', authHeaders);
+    console.log(data);
+    watch(() => (data.value), (value) => {
+      console.log(value);
+    });
     //   errorMessage = 'Aucunes publications recentes... 😴';
     //   errorMessage = 'La page demandée n\'existe pas 🤷‍♀️';
-    function toggleOptions(e) {
-      e.target.classList.toggle('show');
-      isExpanded.value = !isExpanded.value;
-      console.log(isExpanded.value);
-    }
     return {
-      toggleOptions,
-      isExpanded,
       result,
       status,
       data,
@@ -77,5 +73,8 @@ export default {
 <style scoped>
 .publication_card {
   max-width: 500px;
+}
+.dropdown-toggle::after {
+  display: none;
 }
 </style>

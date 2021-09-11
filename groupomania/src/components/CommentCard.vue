@@ -6,8 +6,8 @@
           :key="comment.id"
           class="">
           <div class="d-flex align-items-center my-1">
-              <div class="col-2">
-                  <img :src="comment.User.imageUrl" width="20" height="20" class="img-fluid shadow-sm rounded-circle" alt="Logo du profil">
+              <div class="col-1">
+                  <img :src="comment.User.imageUrl" width="30" height="30" class="img-fluid shadow-sm rounded-circle" alt="Logo du profil">
               </div>
               <div class="col rounded-pill text-start text-wrap bg-light ps-3 py-1">
                 <p class="fw-bold m-0">{{ comment.User.username }}</p>

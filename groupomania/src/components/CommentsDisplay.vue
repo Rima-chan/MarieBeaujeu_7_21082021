@@ -31,7 +31,7 @@
 
 <script>
 import { reactive, toRefs } from 'vue';
-// import { useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { ref, watch } from '@vue/runtime-core';
 import CommentField from './formFields/CommentField.vue';
 import useFetchPost from '../composables/useFetchPost';
@@ -45,7 +45,7 @@ export default {
     postId: Number,
   },
   setup(props) {
-    // const router = useRouter();
+    const router = useRouter();
     const errorMessage = ref('');
     const newComment = reactive({
       content: '',
@@ -68,6 +68,7 @@ export default {
       console.log(newComment);
       console.log(data);
       newComment.content = '';
+      router.go(0);
     };
     watch(() => status.value, (value) => {
       if (value === 201) {

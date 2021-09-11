@@ -16,7 +16,7 @@
                 <form @submit.prevent method="post" enctype="multipart/form-data">
                   <div class="d-flex mt-2">
                       <text-field v-model="title"/>
-                      <input-file-field @getImageFile="displayImagePreview" />
+                      <input-file-field @getImageFile="displayImagePreview" inputFieldId="new_publication_file" />
                   </div>
                   <img :src="imagePreviewUrl" alt="" id="image" style="width:100%" class="img-fluid">
                   <div class="col-12 d-inline-flex justify-content-between align-items-center mt-2">
@@ -56,9 +56,9 @@ export default {
     const imageFile = ref('');
     const title = ref('');
     const userRegisteredInLocalSotrage = JSON.parse(localStorage.getItem('userRegistered'));
-    // if (!userRegisteredInLocalSotrage) {
-    //   errorMessage.value = 'Désolé, nous ne pouvons pas publier la publication'; // Ajouter un break ?
-    // }
+    if (!userRegisteredInLocalSotrage) {
+      errorMessage.value = 'Désolé, nous ne pouvons pas publier la publication'; // Ajouter un break ?
+    }
     function displayImagePreview(file) {
       imagePreviewUrl.value = URL.createObjectURL(file);
       imageFile.value = file;

@@ -51,13 +51,19 @@ exports.updateComment = (req, res) => {
     const commentId = parseInt(req.params.commentId);
     const publicationId = parseInt(req.params.publicationId);
     const newContent = req.body.content;
-    const headAuthorization = req.headers.authorization;
-    const userToken = jwtUtils.getUserToken(headAuthorization);
-    console.log(commentId);
+    // const headAuthorization = req.headers.authorization;
+    // const userToken = jwtUtils.getUserToken(headAuthorization);
+
+    const cookie = req.headers.cookie;
+    const access_token = cookie.split('=')[1];
+    if (!cookie  || !access_token) {
+        return res.status(401).json({error: 'Missing token in cookie'});
+    }
+    const decodedToken = jwt.verify(access_token, process.env.DB_TOKEN);
 
     Comment.findOne({where: {id: commentId}})
         .then(commentFound => {
-            if(commentFound.UserId != userToken.userId) {
+            if(commentFound.UserId != decodedToken.userId) {
                 return res.status(401).json({error: 'Unauthorized request'});
             }
             commentFound.update({
@@ -74,11 +80,18 @@ exports.updateComment = (req, res) => {
 exports.deleteOneComment = (req, res) => {
     const commentId = parseInt(req.params.commentId);
     const publicationId = parseInt(req.params.publicationId);
-    const headAuthorization = req.headers.authorization;
-    const userToken = jwtUtils.getUserToken(headAuthorization);
+    // const headAuthorization = req.headers.authorization;
+    // const userToken = jwtUtils.getUserToken(headAuthorization);
+    const cookie = req.headers.cookie;
+    const access_token = cookie.split('=')[1];
+    if (!cookie  || !access_token) {
+        return res.status(401).json({error: 'Missing token in cookie'});
+    }
+    const decodedToken = jwt.verify(access_token, process.env.DB_TOKEN);
+
     Comment.findOne({where: {id: commentId}})
         .then(commentFound => {
-            if (userToken.userId === commentFound.UserId || userToken.isAdmin) {
+            if (decodedToken.userId === commentFound.UserId || decodedToken.isAdmin) {
                 Publication.findOne({where: {id: publicationId}})
                     .then(publicationFound => {
                         publicationFound.comments--;
@@ -116,7 +129,7 @@ exports.getAllComments = (req, res) => {
     })
     .then(comments => {
         if (comments.rows.length === 0) {
-            return res.status(404).json({error: 'There are no comments'});
+            return res.status(204).json({message: 'There are no comments'});
         } else {
             res.status(200).json({
                 comments: comments.rows

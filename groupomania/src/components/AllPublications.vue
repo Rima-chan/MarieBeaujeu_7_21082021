@@ -7,7 +7,7 @@
             </div>
             <div class="col-12 d-flex flex-column align-items-center my-2">
                 <h2 class="col-12 h4">Les dernières publications...</h2>
-                <publication-card @getStatusCode="displayMessage" />
+                <publication-card />
                 <div>{{ noPublicationMessage }}</div>
             </div>
         </div>
@@ -25,12 +25,7 @@ export default {
   name: 'AllPublications',
   setup() {
     const noPublicationMessage = ref('');
-    function displayMessage(statusCode) {
-      console.log('Status ');
-      console.log(statusCode);
-    }
     return {
-      displayMessage,
       noPublicationMessage,
     };
   },

@@ -21,6 +21,7 @@ export default function useFetchGet(ApiName, config) {
         result.data = response.data;
         console.log(response.data);
         result.status = response.status;
+        console.log(response.status);
       } catch (e) {
         result.error = e.response.data.error;
         console.log(e.response);
