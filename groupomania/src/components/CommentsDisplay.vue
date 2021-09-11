@@ -6,7 +6,7 @@
                 <h6 class="m-0">Commentaires</h6>
             </span>
         </div>
-        <comment-card :postId="newComment.publicationId"/>
+        <comment-card :postId="newComment.publicationId" :commentId="newComment.id" />
         <div class="col-12">
           <form @submit.prevent method="post" enctype="application/x-www-form-urlencoded">
                 <div class="d-flex align-items-center">
@@ -20,20 +20,21 @@
                 <button
                   type="submit"
                   @click="submitted"
+                  :disabled="newComment.content.length === 0"
                   class="btn btn-info rounded-circle">
-                    <i class="fas fa-paper-plane"></i>
+                  <i class="fas fa-paper-plane"></i>
                 </button>
                 </span>
                 </div>
             </form>
         </div>
-        <span v-if="errorMessage" class="invalidField">{{ erroMessage }}</span>
+        <span class="invalidField">{{ errorMessage }}</span>
     </div>
 </template>
 
 <script>
 import { reactive, toRefs } from 'vue';
-// import { useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import { ref, watch } from '@vue/runtime-core';
 import CommentField from './formFields/CommentField.vue';
 import CommentCard from './CommentCard.vue';
@@ -49,12 +50,12 @@ export default {
   },
   setup(props) {
     // Handle Navigation
-    // const router = useRouter();
+    const router = useRouter();
     const errorMessage = ref('');
+    const isErrorDisplay = ref(false);
     // Recover props and creat reactive object for the new comment
     const { postId } = toRefs(props);
     const newComment = reactive({
-      commentId: '',
       content: '',
       publicationId: '',
     });
@@ -69,21 +70,21 @@ export default {
       status, data, error, loading, fetch,
     } = useFetchPost(`publications/${newComment.publicationId}/comments`, newComment, authHeaders);
     const submitted = async () => {
-      if (!newComment.publicationId || !newComment.content) {
-        errorMessage.value = 'Impossible de publier le commentaire';
+      if (!newComment.content || !newComment.publicationId) {
+        errorMessage.value = 'Il manque des infos pour publier le commentaire';
       } else {
         fetch();
-        console.log(data);
+        newComment.content = '';
+        console.log(data.value);
+        router.go(0);
       }
-      // newComment.content = '';
-      // router.go(0);
+      return errorMessage;
     };
-    // Check updates on request status and send a message
     watch(() => status.value, (value) => {
       if (value === 201) {
-        console.log('Comment crée');
+        router.go(0);
       } else {
-        errorMessage.value = 'Désolé nous n\'avons pas pu poster votre message 😥';
+        alert('Désole il y a un problème 🤷');
       }
     });
     return {
@@ -97,6 +98,7 @@ export default {
       loading,
       fetch,
       errorMessage,
+      isErrorDisplay,
     };
   },
 };

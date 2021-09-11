@@ -19,10 +19,14 @@ export default function useFormValidation() {
   const validatePasswordField = (fieldName, fieldValue) => {
     errors[fieldName] = !fieldValue ? isEmpty(fieldName, fieldValue) : isPassword(fieldName, fieldValue);
   };
+  const validateEmptyField = (fieldName, fieldValue) => {
+    errors[fieldName] = !fieldValue ? 'On ne peut pas envoyer un champs vide ! 🍃 ' : '';
+  };
   return {
     errors,
     validateEmailField,
     validateUsernameField,
     validatePasswordField,
+    validateEmptyField,
   };
 }

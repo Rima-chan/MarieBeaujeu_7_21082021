@@ -28,9 +28,11 @@ export default function useFetchPost(ApiName, dataToSend, config = basicHeadersC
       result.data = response.data;
       result.xsrfToken = response.data.xsrfToken;
       result.status = response.status;
+      console.log(result.data);
     } catch (e) {
-      result.error = e.response.data.error;
+      result.error = e.response ? e.response.data.error : e;
       result.status = e.response.status;
+      console.log(result.status);
     } finally {
       result.loading = false;
     }

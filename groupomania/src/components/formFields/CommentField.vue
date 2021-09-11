@@ -4,6 +4,7 @@
         <input
           type="text"
           @input="$emit('update:modelValue', $event.target.value)"
+          @keyup="validateInput"
           :value="modelValue"
           class="form-control align-middle" id="inputComment"
           aria-describedby=""
@@ -13,6 +14,7 @@
 </template>
 
 <script>
+import { ref } from '@vue/runtime-core';
 
 export default {
   name: 'CommentField',
@@ -20,8 +22,10 @@ export default {
     modelValue: String,
   },
   setup(props) {
+    const input = ref('');
     return {
       props,
+      input,
     };
   },
 };

@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router';
-// import Login from '../views/Login.vue';
 
 const routes = [
   {
@@ -25,6 +24,7 @@ const routes = [
   {
     path: '/publications',
     name: 'Publications',
+    props: true,
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -35,6 +35,11 @@ const routes = [
     name: 'Profil',
     props: true,
     component: () => import(/* webpackChunkName: "profil" */ '../views/ProfilView.vue'),
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'PageNotFound',
+    component: () => import(/* webpackChunkName: "profil" */ '../views/PageNotFound.vue'),
   },
 ];
 

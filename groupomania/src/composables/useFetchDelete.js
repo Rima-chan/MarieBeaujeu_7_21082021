@@ -13,9 +13,9 @@ export default function useFetchDelete(ApiName, config) {
     loading: true,
   });
   const { url } = useApiGenerator(ApiName);
-  const fetch = async () => {
+  const fetch = async (id) => {
     try {
-      const response = await axios.delete(url, config);
+      const response = await axios.delete(`${url}/${id}`, config);
       result.response = response;
       result.data = response.data;
       console.log(response.data);

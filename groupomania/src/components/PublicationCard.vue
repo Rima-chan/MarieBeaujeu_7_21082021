@@ -14,7 +14,7 @@
               <h6 class="">{{ publication.User.username }}</h6>
               <small class="text-muted">{{ publication.createdAt.substr(0, 10).split("-").reverse().join("-") }}</small>
             </span>
-            <update-publication-button :content="publication.title" />
+            <update-publication-button v-if="isAdmin || publication.UserId === userIdRegistered" :content="publication.title" />
           </div>
           <p class="card-text">{{ publication.title }}</p>
       </div>
@@ -29,39 +29,33 @@
 </template>
 
 <script>
-import { reactive, watch } from '@vue/runtime-core';
+// import { reactive } from '@vue/runtime-core';
 // import { onMounted } from 'vue';
-import useFetchGet from '../composables/useFetchGet';
-import useAxiosHeaders from '../composables/useAxiosHeaders';
 import CommentsDisplay from './CommentsDisplay.vue';
 import UpdatePublicationButton from './UpdatePublicationCard.vue';
+import useFetchGet from '../composables/useFetchGet';
+import useAxiosHeaders from '../composables/useAxiosHeaders';
+import useUserInfos from '../composables/useUserInfos';
 
 export default {
   components: { CommentsDisplay, UpdatePublicationButton },
   name: 'PublicationCard',
   setup() {
     let errorMessage;
-    const result = reactive({
-      publications: [],
-      totalPages: 0,
-    });
-    // const userToken = ref('');
-    // const userRegistered = JSON.parse(localStorage.getItem('userRegistered'));
-    // userToken.value = userRegistered.token;
+    // Authentificated user infos
+    const {
+      userId: userIdRegistered, isAdmin,
+    } = useUserInfos();
+    // GET all publications
     const { authHeaders } = useAxiosHeaders();
     const {
       status, data, error, loading,
     } = useFetchGet('publications', authHeaders);
-    watch(() => (status.value), (value) => {
-      if (value === 200) {
-        result.publications = data;
-        result.totalPages = data;
-      }
-    });
     //   errorMessage = 'Aucunes publications recentes... 😴';
     //   errorMessage = 'La page demandée n\'existe pas 🤷‍♀️';
     return {
-      result,
+      userIdRegistered,
+      isAdmin,
       status,
       data,
       error,

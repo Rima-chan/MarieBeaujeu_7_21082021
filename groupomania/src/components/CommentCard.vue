@@ -14,6 +14,7 @@
                   <p class="text-wrap fw-bold m-0">{{ comment.User.username }}</p>
                   <button
                     v-if="userIdRegistered === comment.UserId || isAdmin"
+                    :id="comment.id"
                     :commentId="comment.id"
                     @click="deleteComment"
                     type="button"
@@ -32,9 +33,9 @@
 
 <script>
 import {
-  reactive, ref, toRefs, watch,
+  reactive, ref, toRefs,
 } from '@vue/runtime-core';
-// import { useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import useFetchGet from '../composables/useFetchGet';
 import useFetchDelete from '../composables/useFetchDelete';
 import useAxiosHeaders from '../composables/useAxiosHeaders';
@@ -44,10 +45,11 @@ export default {
   name: 'CommentCard',
   props: {
     postId: Number,
+    commentId: Number,
   },
   setup(props) {
     // Handle navigation
-    // const router = useRouter();
+    const router = useRouter();
     // Authentificated user infos
     const {
       userId: userIdRegistered, isAdmin,
@@ -57,11 +59,13 @@ export default {
       publicationId: '',
       comments: [],
       totalPages: 0,
+      id: '',
     });
     // Recover props from parent component and declare empty reactive value for futur comment id
-    const { postId } = toRefs(props);
+    const { postId, commentId: commentIdProps } = toRefs(props);
+    // console.log(commentIdProps);
     result.publicationId = postId.value;
-    const commentId = ref('');
+    const commentId = ref(commentIdProps.value);
     // Requests headers
     const { authHeaders } = useAxiosHeaders();
     // GET all comments
@@ -71,18 +75,14 @@ export default {
     // DELETE comment
     const {
       status: statusDelete, error: errorDelete, loading: loadingDelete, fetch: fetchDelete,
-    } = useFetchDelete(`publications/${result.publicationId}/comments/${commentId.value}`, authHeaders);
+    } = useFetchDelete(`publications/${result.publicationId}/comments`, authHeaders);
     function deleteComment(e) {
       commentId.value = parseInt(e.target.getAttribute('commentId'), 10);
-      console.log(commentId.value);
-      // fetchDelete();
-      // if (window.confirm('Etes-vous sur de vouloir supprimer ce commentaire ?')) {
-      //   // router.go(0);
-      // }
+      if (window.confirm('Etes-vous sur de vouloir supprimer ce commentaire ?')) {
+        fetchDelete(commentId.value);
+        router.go(0);
+      }
     }
-    watch(() => commentId.value, () => {
-      fetchDelete();
-    });
     return {
       userIdRegistered,
       isAdmin,

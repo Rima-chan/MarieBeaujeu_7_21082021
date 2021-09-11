@@ -1,13 +1,13 @@
 <template>
     <span>
         <label
-          for="inputId"
-          class="btn btn-outline-info border-none rounded-circle"
+          for="publicationInput"
+          class="btn btn-outline-info border-none rounded-circle publication_input"
           aria-label="Choisir une image">
             <i class="fas fa-images"></i>
             <input
              type="file"
-             id="inputId"
+             id="publicationInput"
              style="display:none"
              accept="image/*"
              @change="onFilePicked">
@@ -51,5 +51,8 @@ export default {
    position: absolute;
    top: -10000px;
    width: 1px;
+}
+.publication_input {
+  max-width: 500px;
 }
 </style>

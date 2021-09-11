@@ -3,6 +3,7 @@ const User = require('../models/index').User;
 const Publication = require('../models/index').Publication;
 const Comment = require('../models/index').Comment;
 const jwtUtils = require('../utils/jwt.utils');
+const jwt = require('jsonwebtoken');
 const asyncLib = require('async');
 const fs = require('fs');
 

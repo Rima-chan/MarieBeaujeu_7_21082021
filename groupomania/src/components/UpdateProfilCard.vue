@@ -1,4 +1,5 @@
 <template>
+  <div>
     <form @submit.prevent method="post" enctype="multipart/form-data">
         <username-field
           v-if="userId === userIdRegistered"
@@ -6,15 +7,27 @@
         <service-field
           v-if="userId === userIdRegistered"
           v-model="service" />
-        <input-file-field
-          v-if="userId === userIdRegistered"/>
-        <img :src="imagePreviewUrl" alt="" id="image" style="width:100%" class="img-fluid">
+        <span>
+        <label
+          for="updateProfilPicture"
+          class="btn btn-outline-info border-none rounded-circle"
+          aria-label="Choisir une nouvelle image de profil">
+            <i class="fas fa-images"></i>
+            <input
+             type="file"
+             id="updateProfilPicture"
+             style="display:none"
+             accept="image/*"
+             @change="pickNewPicture" >
+        </label>
+        <!-- <img :src="imagePreviewSrc" alt="" id="image" style="width:100%"> -->
+        </span>
         <span class="d-inline-flex justify-content-end mt-3 mb-2">
           <button
             v-if="userId === userIdRegistered || isAdmin"
             @click="deleteProfil"
             type="button"
-            class="btn btn-outline-danger me-3" id="deleteProfilButton">
+            class="btn btn-outline-danger mx-3" id="deleteProfilButton">
             <i class="fas fa-trash-alt"></i>
           </button>
           <button
@@ -25,6 +38,7 @@
             Modifier</button>
         </span>
     </form>
+  </div>
 </template>
 
 <script>
@@ -40,7 +54,7 @@ import useUserInfos from '../composables/useUserInfos';
 export default {
   components: { UsernameField, ServiceField },
   name: 'UpdateProfilCard',
-  setup() {
+  setup(props, context) {
     // Handle page redirection
     const route = useRoute();
     const router = useRouter();
@@ -58,6 +72,19 @@ export default {
       service: '',
       imageUrl: '',
     });
+    const imageFile = ref('');
+    function pickNewPicture(event) {
+      console.log('Helo');
+      console.log(event);
+      const file = event.target.files[0];
+      console.log(file);
+      // TODO : ajouter des règles de vérifications (Si file alors.., longueur, poids...)
+      if (file) {
+        imageFile.value = file;
+        console.log(imageFile.value);
+        context.emit('getImageProfilFile', file);
+      }
+    }
     const {
       status: statusPut, data: dataPut, error: errorPut, loading: loadingPut, fetch: fetchPut,
     } = useFetchPut(`users/${userId.value}`, infosUpdated, formDataAuthHeaders);
@@ -68,18 +95,18 @@ export default {
     // Choose request headers and get back reactives data and fetchDelete function
     const {
       status: statusDelete, data: dataDelete, error: errorDelete, loading: loadingDelete, fetch: fetchDelete,
-    } = useFetchDelete(`users/${userId.value}`, authHeaders);
+    } = useFetchDelete('users', authHeaders);
     // After confirmation, delete profil, clean localStorage and logout user (expect for Admin)
     function deleteProfil() {
       if (window.confirm('Etes-vous sur de vouloir supprimer ce compte ?')) {
         console.log(isAdmin.value);
         if (isAdmin.value && userId.value !== userIdRegistered.value) {
-          fetchDelete();
+          fetchDelete(userId.value);
           router.push('/accueil');
         } else {
           localStorage.removeItem('xsrfToken');
           localStorage.removeItem('userRegistered');
-          fetchDelete();
+          fetchDelete(userId.value);
           router.push('/');
         }
       }
@@ -87,6 +114,7 @@ export default {
     const validationMessage = ref('');
     return {
       updateProfil,
+      pickNewPicture,
       statusPut,
       dataPut,
       errorPut,
@@ -107,5 +135,8 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.image_preview {
+  max-width: 200px;
+}
 </style>
