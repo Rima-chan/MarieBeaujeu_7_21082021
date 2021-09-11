@@ -5,11 +5,13 @@
                 <i class="fas fa-comment m-0 ps-3 pe-2"></i>
                 <h6 class="m-0">Commentaires</h6>
             </span>
-            <comment-card :postId="newComment.publicationId"/>
-            <form @submit.prevent method="post" enctype="application/x-www-form-urlencoded">
+        </div>
+        <comment-card :postId="newComment.publicationId"/>
+        <div class="col-12">
+          <form @submit.prevent method="post" enctype="application/x-www-form-urlencoded">
                 <div class="d-flex align-items-center">
                 <span class="col-2 p-0">
-                    <img :src="userImageUrl" width="20" height="20" class="img-fluid rounded-circle" alt="Logo du profil">
+                    <img :src="imageProfil" width="20" height="20" class="img-fluid rounded-circle" alt="Logo du profil">
                 </span>
                 <span class="col-8 mb-4 p-0">
                 <comment-field v-model="newComment.content" />
@@ -24,19 +26,20 @@
                 </span>
                 </div>
             </form>
-            <span v-if="errorMessage" class="invalidField">{{ erroMessage }}</span>
         </div>
+        <span v-if="errorMessage" class="invalidField">{{ erroMessage }}</span>
     </div>
 </template>
 
 <script>
 import { reactive, toRefs } from 'vue';
-import { useRouter } from 'vue-router';
+// import { useRouter } from 'vue-router';
 import { ref, watch } from '@vue/runtime-core';
 import CommentField from './formFields/CommentField.vue';
+import CommentCard from './CommentCard.vue';
 import useFetchPost from '../composables/useFetchPost';
 import useAxiosHeaders from '../composables/useAxiosHeaders';
-import CommentCard from './CommentCard.vue';
+import useUserInfos from '../composables/useUserInfos';
 
 export default {
   components: { CommentField, CommentCard },
@@ -45,31 +48,37 @@ export default {
     postId: Number,
   },
   setup(props) {
-    const router = useRouter();
+    // Handle Navigation
+    // const router = useRouter();
     const errorMessage = ref('');
+    // Recover props and creat reactive object for the new comment
+    const { postId } = toRefs(props);
     const newComment = reactive({
+      commentId: '',
       content: '',
       publicationId: '',
     });
-    const { postId } = toRefs(props);
     newComment.publicationId = postId.value;
-    const userInLocalStorage = JSON.parse(localStorage.getItem('userRegistered'));
-    const userImageUrl = userInLocalStorage ? userInLocalStorage.imageUrl : '../assets/avatar_user.png';
+    // Authentificated user infos
+    const {
+      userId: userIdRegistered, imageProfil,
+    } = useUserInfos();
+    // CREATE comment
     const { authHeaders } = useAxiosHeaders();
     const {
       status, data, error, loading, fetch,
     } = useFetchPost(`publications/${newComment.publicationId}/comments`, newComment, authHeaders);
     const submitted = async () => {
-      if (!newComment.publicationId || !newComment.publicationId) {
+      if (!newComment.publicationId || !newComment.content) {
         errorMessage.value = 'Impossible de publier le commentaire';
       } else {
         fetch();
+        console.log(data);
       }
-      console.log(newComment);
-      console.log(data);
-      newComment.content = '';
-      router.go(0);
+      // newComment.content = '';
+      // router.go(0);
     };
+    // Check updates on request status and send a message
     watch(() => status.value, (value) => {
       if (value === 201) {
         console.log('Comment crée');
@@ -78,7 +87,8 @@ export default {
       }
     });
     return {
-      userImageUrl,
+      userIdRegistered,
+      imageProfil,
       newComment,
       submitted,
       status,

@@ -151,7 +151,7 @@ exports.getOneUser = (req, res) => {
         return res.status(400).json({error: 'Invalid parameters'});
     }
     User.findOne({
-        attributes: ['id', 'username', 'service', 'imageUrl'],
+        attributes: ['id', 'username', 'service', 'imageUrl', 'email'],
         where: {id: userId}
     })
         .then(userFound => {

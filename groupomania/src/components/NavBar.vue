@@ -11,7 +11,7 @@
             <div class="navbar-nav">
                 <router-link to="/accueil" aria-current="page" class="nav-link">Accueil</router-link>
                 <router-link to="/publications" class="nav-link">9Gag'mania</router-link>
-                <router-link :to="{ name: 'Profil', params: { userId: userId }}" class="nav-link">Mon profil</router-link>
+                <router-link :to="{ name: 'Profil', params: { userId: userIdRegistered }}" class="nav-link">Mon profil</router-link>
             </div>
             </div>
         </div>
@@ -20,22 +20,18 @@
 
 <script>
 import { ref } from '@vue/runtime-core';
+import useUserInfos from '../composables/useUserInfos';
 
 export default {
   name: 'NavBar',
   setup() {
     const errorMessage = ref('');
-    const userId = ref(null);
-    const userInLocalStorage = JSON.parse(localStorage.getItem('userRegistered'));
-    if (!userInLocalStorage) {
-      errorMessage.value = 'Désolé, nous nous n\'arrivons pas à trouver votre profil...';
-    } else {
-      userId.value = parseInt(userInLocalStorage.userId, 10);
-      console.log(userId);
-    }
+    const {
+      userId: userIdRegistered,
+    } = useUserInfos();
     return {
       errorMessage,
-      userId,
+      userIdRegistered,
     };
   },
 };

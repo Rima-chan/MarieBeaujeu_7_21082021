@@ -7,7 +7,11 @@
           </div>
           <div class="border-top">
             <h5 class="mt-3">{{ data.username }}</h5>
-            <p>Service {{ data.service }}</p>
+            <p class="m-0">Service {{ data.service }}</p>
+            <br>
+            <p
+              v-if="userIdRegistered === userId"
+              class="text-start fw-light fst-italic m-0 ms-4">{{ data.email }}</p>
           </div>
           <div class="mx-3">
             <update-profil-card v-if="userIdRegistered === data.id || isAdmin" />
@@ -50,6 +54,7 @@ export default {
       loading,
       userIdRegistered,
       isAdmin,
+      userId,
     };
   },
 };

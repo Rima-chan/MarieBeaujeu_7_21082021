@@ -44,17 +44,15 @@ export default {
     // Handle page redirection
     const route = useRoute();
     const router = useRouter();
-    // Get back infos from authentificated user
+    // Authentificated user infos
     const {
       userId: userIdRegistered, isAdmin,
     } = useUserInfos();
-    // Get back params of user profil to display
+    // Recover params of user profil to display
     const userId = ref(null);
     userId.value = parseInt(route.params.userId, 10);
-    console.log(userId.value === userIdRegistered.value);
-    // Headers requests
-    const { authHeaders, formDataAuthHeaders } = useAxiosHeaders();
     // UPDATE PROFIL
+    const { authHeaders, formDataAuthHeaders } = useAxiosHeaders();
     const infosUpdated = reactive({
       username: '',
       service: '',

@@ -26,10 +26,8 @@ export default {
     inputFieldId: String, // ajouter required ?
   },
   setup(props, context) {
-    const inputId = ref('');
     const { inputFieldId } = toRefs(props);
-    inputId.value = inputFieldId.value;
-    console.log(inputId);
+    const inputId = ref(inputFieldId.value);
     function onFilePicked(event) {
       // TODO : ajouter des règles de vérifications (Si file alors.., longueur, poids...)
       const file = event.target.files[0];

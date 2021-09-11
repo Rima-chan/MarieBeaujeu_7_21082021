@@ -44,26 +44,32 @@ import TextField from './formFields/TextField.vue';
 import useFetchPost from '../composables/useFetchPost';
 import useAxiosHeaders from '../composables/useAxiosHeaders';
 import ErrorDisplay from './ErrorDisplay.vue';
+import useUserInfos from '../composables/useUserInfos';
 
 export default {
   components: { TextField, InputFileField, ErrorDisplay },
   name: 'NewPublicationCard',
   setup() {
+    // Variables
     const router = useRouter();
     const errorMessage = ref('');
     const validationMessage = ref('');
+    // Will store new publication infos
     const imagePreviewUrl = ref('');
     const imageFile = ref('');
     const title = ref('');
-    const userRegisteredInLocalSotrage = JSON.parse(localStorage.getItem('userRegistered'));
-    if (!userRegisteredInLocalSotrage) {
-      errorMessage.value = 'Désolé, nous ne pouvons pas publier la publication'; // Ajouter un break ?
-    }
+    // Authentificated user infos
+    const {
+      userId: userIdRegistered,
+    } = useUserInfos();
+    // Display image input
     function displayImagePreview(file) {
       imagePreviewUrl.value = URL.createObjectURL(file);
       imageFile.value = file;
     }
+    // Create form data which will sent to backend
     const formData = new FormData();
+    formData.append('userId', userIdRegistered.value);
     watch(() => imageFile.value, (imageValue) => {
       formData.append('imageUrl', imageValue);
     });
@@ -71,7 +77,7 @@ export default {
     watch(() => title.value, (titleValue) => {
       formData.set('title', titleValue);
     });
-    formData.append('userId', userRegisteredInLocalSotrage.userId);
+    // CREATE publication
     const { formDataAuthHeaders } = useAxiosHeaders();
     const {
       status, data, error, loading, fetch,
@@ -79,6 +85,7 @@ export default {
     const submitted = async () => {
       fetch();
     };
+    // Check updates on request status and send a message
     watch(() => status.value, (value) => {
       if (value === 201) {
         imagePreviewUrl.value = '';
@@ -92,13 +99,14 @@ export default {
       }
     });
     return {
+      userIdRegistered,
       displayImagePreview,
       imagePreviewUrl,
+      formDataAuthHeaders,
       formData,
       title,
       imageFile,
       submitted,
-      formDataAuthHeaders,
       status,
       error,
       loading,

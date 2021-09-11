@@ -15,8 +15,6 @@ export default function useUserInfo() {
     userRegistered.userId = parseInt(userInLocalStorage.userId, 10);
     userRegistered.isAdmin = userInLocalStorage.isAdmin;
     userRegistered.imageProfil = userInLocalStorage.imageUrl;
-    console.log(userInLocalStorage.isAdmin);
-    console.log(userRegistered);
   }
   return {
     ...toRefs(userRegistered),
