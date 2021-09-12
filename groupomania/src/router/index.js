@@ -21,7 +21,7 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "home" */ '../views/HomeView.vue'),
-    // meta: { requiresAuth: true },
+    meta: { requiresAuth: true },
   },
   {
     path: '/publications',
@@ -38,7 +38,7 @@ const routes = [
     name: 'Profil',
     props: true,
     component: () => import(/* webpackChunkName: "profil" */ '../views/ProfilView.vue'),
-    // meta: { requiresAuth: true },
+    meta: { requiresAuth: true },
   },
   {
     path: '/:pathMatch(.*)*',
@@ -56,7 +56,13 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     console.log(('coucou'));
     const { userId } = useUserInfo();
-    console.log(userId?.value);
+    if (!userId?.value) {
+      next({
+        path: '/connexion',
+      });
+    } else {
+      next();
+    }
   }
   console.log(from);
   console.log(next);
