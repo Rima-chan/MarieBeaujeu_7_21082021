@@ -1,6 +1,6 @@
 <template>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
+        <div class="container p-0">
             <a class="navbar-brand" href="/">
                 <img src="../assets/logo-left-font-white.png" alt="Groupomania logo" class="img-fluid my-3 logo">
             </a>
@@ -12,6 +12,7 @@
                 <router-link to="/accueil" aria-current="page" class="nav-link">Accueil</router-link>
                 <router-link to="/publications" class="nav-link">9Gag'mania</router-link>
                 <router-link :to="{ name: 'Profil', params: { userId: userIdRegistered }}" class="nav-link">Mon profil</router-link>
+                <router-link to="/connexion" class="nav-link">Déconnexion</router-link>
             </div>
             </div>
         </div>

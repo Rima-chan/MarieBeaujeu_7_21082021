@@ -5,7 +5,7 @@
             <password-field v-model="user.password" />
             <username-field v-model="user.username" />
             <service-field v-model="user.service" />
-            <button type="submit" @click="submittedPost" :disabled="isSignupButtonDisabled" class="btn btn-dark">Inscription</button>
+            <button type="submit" @click="submittedPost" :disabled="isSignupButtonDisabled" class="btn btn-dark mt-3">Inscription</button>
             <br><br>
         </form>
         <success-display :isSuccess="status === 201" :message="validationMessage"/>

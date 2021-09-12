@@ -128,7 +128,7 @@ exports.login = (req, res) => {
             xsrfToken: xsrfToken,
             },
             process.env.DB_TOKEN,
-            {expiresIn: '8h'}
+            {expiresIn: '2h'}
         );
         res.cookie('access_token', accessToken, {
             httpOnly: true,
@@ -137,6 +137,7 @@ exports.login = (req, res) => {
         });
         return res.status(200).json({
             'userId': userFound.id,
+            'username': userFound.username,
             'isAdmin': userFound.isAdmin,
             'imageUrl': userFound.imageUrl,
             xsrfToken,

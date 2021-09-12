@@ -9,7 +9,7 @@
               <span class="rounded-circle shadow-sm logo-profil-container me-3">
                 <img src="http://localhost:3000/images/avatar_user.png" width="40" height="40" class="img-fluid rounded-circle" alt="Logo du profil">
               </span>
-              <span>Pseudo</span>
+              <span>{{  }}</span>
             </div>
             <div class="col-12 d-flex flex-column justify-content-center px-3">
               <div class="">

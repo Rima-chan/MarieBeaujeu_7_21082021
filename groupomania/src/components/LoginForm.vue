@@ -7,13 +7,20 @@
             <br><br>
         </form>
         <error-display :isError="status && status != 200" :status="status" :error="errorMessage" />
+        <!-- <div>{{ store.userState.userInfos }}</div> -->
     </div>
 </template>
 
 <script>
-import { reactive, watch } from 'vue';
+import {
+  inject,
+  reactive,
+  watch,
+  provide,
+} from 'vue';
 import { useRouter } from 'vue-router';
 import { ref } from '@vue/runtime-core';
+// import store from '../store';
 import EmailField from './formFields/EmailField.vue';
 import PasswordField from './formFields/PasswordField.vue';
 import ErrorDisplay from './ErrorDisplay.vue';
@@ -29,6 +36,7 @@ export default {
     ErrorDisplay,
   },
   setup() {
+    const store = inject('store');
     const router = useRouter();
     const errorMessage = ref('');
     const user = reactive({
@@ -42,17 +50,33 @@ export default {
     } = useFetchPost('users/login', user);
     const submittedPost = async () => {
       fetch();
+      console.log(data);
     };
-    watch(() => status.value, (value) => {
-      if (value === 200) {
+    const updateUserState = (newUser) => {
+      store.methods.setUser(newUser);
+    };
+    provide('updateUserState', updateUserState);
+    watch([loading], () => {
+      if (status.value === 200) {
         console.log('OK');
-        localStorage.setItem('userRegistered', JSON.stringify(data.value));
-        localStorage.setItem('xsrfToken', JSON.stringify(xsrfToken.value));
+        console.log(data.value);
+        updateUserState(data.value);
         router.push('/accueil');
       }
       errorMessage.value = error.value ? `${error.value}` : 'Oups ! Il semblerait qu\'il y ait un soucis... 😥';
     });
+    // watch(() => status.value, (value) => {
+    //   if (value === 200) {
+    //     console.log('OK');
+    //     localStorage.setItem('userRegistered', JSON.stringify(data.value));
+    //     localStorage.setItem('xsrfToken', JSON.stringify(xsrfToken.value));
+    //     // router.push('/accueil');
+    //   }
+    //   errorMessage.value = error.value ? `${error.value}` : 'Oups ! Il semblerait qu\'il y ait un soucis... 😥';
+    // });
     return {
+      store,
+      updateUserState,
       user,
       errors,
       errorMessage,
