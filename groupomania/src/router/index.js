@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import useUserInfo from '../composables/useUserInfos';
 
 const routes = [
   {
@@ -30,7 +31,7 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "publications" */ '../views/PublicationsView.vue'),
-    // meta: { requiresAuth: true },
+    meta: { requiresAuth: true },
   },
   {
     path: '/profil/:userId',
@@ -49,6 +50,17 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    console.log(('coucou'));
+    const { userId } = useUserInfo();
+    console.log(userId?.value);
+  }
+  console.log(from);
+  console.log(next);
+  next();
 });
 
 export default router;

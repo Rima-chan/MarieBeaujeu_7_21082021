@@ -13,7 +13,7 @@ const commentRoutes = require('./routes/comment');
 
 const app = express();
 
-// app.use(limiter);
+app.use(limiter);
 
 //CORS Policy
 const corsOptions = {
