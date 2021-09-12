@@ -90,7 +90,7 @@ exports.login = (req, res) => {
         // Find user in DB
         function(done) {
             User.findOne({
-                attributes: ['id', 'email', 'password', 'isAdmin', 'imageUrl'],
+                attributes: ['id', 'email', 'password', 'isAdmin', 'imageUrl', 'username'],
                 where: {email:email}
             })
             .then(userFound => {

@@ -12,7 +12,7 @@
                 <router-link to="/accueil" aria-current="page" class="nav-link">Accueil</router-link>
                 <router-link to="/publications" class="nav-link">9Gag'mania</router-link>
                 <router-link :to="{ name: 'Profil', params: { userId: userIdRegistered }}" class="nav-link">Mon profil</router-link>
-                <router-link to="/connexion" class="nav-link">Déconnexion</router-link>
+                <h6 @click="validateLogout" class="nav-link pointer">Déconnexion</h6>
             </div>
             </div>
         </div>
@@ -20,19 +20,34 @@
 </template>
 
 <script>
-import { ref } from '@vue/runtime-core';
+import { ref, inject } from 'vue';
+// import { computed } from 'vue';
+import { useRouter } from 'vue-router';
 import useUserInfos from '../composables/useUserInfos';
+// import { computed } from '@vue/runtime-dom';
 
 export default {
   name: 'NavBar',
   setup() {
+    const router = useRouter();
+    const store = inject('store');
     const errorMessage = ref('');
     const {
       userId: userIdRegistered,
     } = useUserInfos();
+    // const validateLogout = computed(() => {
+    // })
+    function validateLogout() {
+      console.log('nav');
+      store.methods.logout();
+      router.push('/connexion');
+      // console.log(store.userState);
+    }
     return {
+      store,
       errorMessage,
       userIdRegistered,
+      validateLogout,
     };
   },
 };
@@ -42,5 +57,8 @@ export default {
 .logo {
     max-width: 200px;
     max-height: 80px;
+}
+.pointer {
+  cursor: pointer;
 }
 </style>

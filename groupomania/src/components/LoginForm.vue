@@ -16,7 +16,6 @@ import {
   inject,
   reactive,
   watch,
-  provide,
 } from 'vue';
 import { useRouter } from 'vue-router';
 import { ref } from '@vue/runtime-core';
@@ -37,6 +36,7 @@ export default {
   },
   setup() {
     const store = inject('store');
+    console.log(store);
     const router = useRouter();
     const errorMessage = ref('');
     const user = reactive({
@@ -53,9 +53,9 @@ export default {
       console.log(data);
     };
     const updateUserState = (newUser) => {
+      console.log('Cool');
       store.methods.setUser(newUser);
     };
-    provide('updateUserState', updateUserState);
     watch([loading], () => {
       if (status.value === 200) {
         console.log('OK');

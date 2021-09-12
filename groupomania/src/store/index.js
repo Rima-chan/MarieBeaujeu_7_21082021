@@ -14,10 +14,14 @@ const methods = {
     window.localStorage.setItem('xsrfToken', JSON.stringify(userState.userInfos.xsrfToken)); // V2 : Include info in userRegister
   },
   logout() {
-    window.localStorage.removeItem('userRegistered');
-    window.localStorage.removeItem('xsrfToken');
+    console.log('loug out');
+    localStorage.removeItem('userRegistered');
+    localStorage.removeItem('xsrfToken');
     userState.userInfos = null;
     userState.authenticating = false;
+  },
+  getUserName() {
+    return userState.userInfos.username;
   },
 };
 export default {

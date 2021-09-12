@@ -9,7 +9,7 @@
               <span class="rounded-circle shadow-sm logo-profil-container me-3">
                 <img src="http://localhost:3000/images/avatar_user.png" width="40" height="40" class="img-fluid rounded-circle" alt="Logo du profil">
               </span>
-              <span>{{  }}</span>
+              <span>{{ pseudo }}</span>
             </div>
             <div class="col-12 d-flex flex-column justify-content-center px-3">
               <div class="">
@@ -35,7 +35,12 @@
 </template>
 
 <script>
-import { ref, watch } from 'vue';
+import {
+  ref,
+  watch,
+  inject,
+  computed,
+} from 'vue';
 import { useRouter } from 'vue-router';
 // import { computed } from '@vue/runtime-core';
 // import { reactive } from '@vue/runtime-core';
@@ -51,6 +56,7 @@ export default {
   name: 'NewPublicationCard',
   setup() {
     // Variables
+    const store = inject('store');
     const router = useRouter();
     const errorMessage = ref('');
     const validationMessage = ref('');
@@ -62,6 +68,8 @@ export default {
     const {
       userId: userIdRegistered,
     } = useUserInfos();
+    //
+    const pseudo = computed(() => (store.userState.userInfos.username));
     // Display image input
     function displayImagePreview(file) {
       imagePreviewUrl.value = URL.createObjectURL(file);
@@ -99,6 +107,8 @@ export default {
       }
     });
     return {
+      store,
+      pseudo,
       userIdRegistered,
       displayImagePreview,
       imagePreviewUrl,
