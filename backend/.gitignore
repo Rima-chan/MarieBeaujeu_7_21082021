@@ -2,4 +2,6 @@ node_modules
 .env
 images/*
 !images/.gitkeep
+config/config.json
 echo .env >> .gitignore
+echo config.json>> .gitignore
