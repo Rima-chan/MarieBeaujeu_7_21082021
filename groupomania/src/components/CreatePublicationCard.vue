@@ -9,15 +9,13 @@
               <span class="rounded-circle shadow-sm logo-profil-container me-3">
                 <img src="http://localhost:3000/images/avatar_user.png" width="40" height="40" class="img-fluid rounded-circle" alt="Logo du profil">
               </span>
-              <span>{{ pseudo }}</span>
             </div>
             <div class="col-12 d-flex flex-column justify-content-center px-3">
-              <div class="">
                 <form @submit.prevent method="post" enctype="multipart/form-data">
-                  <div class="d-flex mt-2">
-                      <text-field v-model="title"/>
-                      <input-file-field @getImageFile="displayImagePreview" :inputFieldId="new_publication_file" />
+                  <div class="order-sm-1">
+                    <text-field v-model="title"/>
                   </div>
+                    <input-file-field @getImageFile="displayImagePreview" :inputFieldId="new_publication_file" />
                   <img :src="imagePreviewUrl" alt="" id="image" class="img-fluid">
                   <div class="col-12 d-inline-flex justify-content-between align-items-center mt-2">
                     <span class="col-5">
@@ -26,7 +24,6 @@
                     <button type="submit" @click="submitted" class="btn btn-outline-success float-end rounded-pill">Publier</button>
                   </div>
                </form>
-              </div>
             </div>
           </div>
           <error-display :isError="status && status != 201" :status="status" :error="errorMessage" />

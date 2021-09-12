@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import store from '../store';
 
 const routes = [
   {
@@ -31,7 +30,7 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "publications" */ '../views/PublicationsView.vue'),
-    meta: { requiresAuth: true },
+    // meta: { requiresAuth: true },
   },
   {
     path: '/profil/:userId',
@@ -50,29 +49,6 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
-});
-
-router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth) {
-    if (!store.userState.userInfos) {
-      next({
-        path: '/',
-        query: { redirect: to.fullPath },
-      });
-    } else {
-      next();
-    }
-    console.log('meta');
-  } else {
-    next();
-  }
-  // if (to.meta.requiresAuth && !store.userState) {
-  //   next({ name: 'connexion' });
-  // } else if (to.meta.requiresAuth && store.userState) {
-  //   next({ name: 'Home' });
-  // } else {
-  //   next();
-  // }
 });
 
 export default router;
