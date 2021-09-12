@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      class="card align-self-center my-4 publication_card"
+      class="card my-4 publication_card"
       v-for="publication in data.publications"
       :publication="publication"
       :key="publication.id" >
@@ -12,7 +12,7 @@
             </div>
             <span class="flex-grow-1 ms-3">
               <h6 class="">{{ publication.User.username }}</h6>
-              <small class="text-muted">{{ publication.createdAt.substr(0, 10).split("-").reverse().join("-") }}</small>
+              <small class="text-muted">Le {{ publication.createdAt.substr(0, 10).split("-").reverse().join("-") }}</small>
             </span>
             <update-publication-button :postId="publication.id" v-if="isAdmin || publication.UserId === userIdRegistered" :content="publication.title" />
           </div>
@@ -68,9 +68,6 @@ export default {
 </script>
 
 <style scoped>
-.publication_card {
-  max-width: 500px;
-}
 .dropdown-toggle::after {
   display: none;
 }

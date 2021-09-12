@@ -2,26 +2,17 @@ require('dotenv').config();
 const User = require('../models/index').User;
 const Publication = require('../models/index').Publication;
 const Comment = require('../models/index').Comment;
-const asyncLib = require('async');
 const fs = require('fs');
-const jwtUtils = require('../utils/jwt.utils');
 
-
-// Toujours même soucis : enregistre l'image même si la publi n'est pas enregistrée dans la BDD
-// --> Avec le front empêcher envoie valeur vide mais jamais sur
-// AU niveau du back : ajouter un middleware mais question du form-data 
 exports.createNewPublication = (req, res) => {
     const title = req.body.title;
-    // Sécurité URL lien ?
-    console.log('File create publi : ');
-    console.log(req.file);
     const imageUrl = req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : req.body.imageLink;
     const userId = parseInt(req.body.userId);
-
+    // Check inputs
     if (imageUrl === null || userId === '') {
         return res.status(400).json({error: 'Missing parameters : '});
     } 
-    
+
     const newPublication = Publication.create({
         UserId: userId, 
         title: title,
@@ -46,13 +37,10 @@ exports.getOnePublication = (req, res) => {
 
 exports.updatePublication = (req, res) => {
     const title = req.body.title;
-    // Sécurité URL entrée ?
     const imageUrl = req.file ? `${req.protocol}://${req.get('host')}/backend/images/${req.file.filename}` : req.body.imageLink;
     const userId = parseInt(req.body.userId);
     const publicationId = parseInt(req.params.id);
-    // const headAuthorization = req.headers.authorization;
-    // const userToken = jwtUtils.getUserToken(headAuthorization);
-
+    // Check user access
     const cookie = req.headers.cookie;
     const access_token = cookie.split('=')[1];
     if (!cookie  || !access_token) {
@@ -87,11 +75,9 @@ exports.updatePublication = (req, res) => {
 
 exports.deletePublication = (req, res) => {
     const publicationId = parseInt(req.params.id);
-    // const headAuthorization = req.headers.authorization;
-    // const userToken = jwtUtils.getUserToken(headAuthorization);
-
     const cookie = req.headers.cookie;
     const access_token = cookie.split('=')[1];
+    // Check user access
     if (!cookie  || !access_token) {
         return res.status(401).json({error: 'Missing token in cookie'});
     }
@@ -107,7 +93,6 @@ exports.deletePublication = (req, res) => {
                         if (error) throw error;
                     });
                 }
-                // If comments
                 Publication.destroy({where: {id: publication.id}})
                     .then( () => res.status(200).json({message: 'Publication successfully deleted'}))
                     .catch(err => res.status(400).json({error: 'Cannot delete publication : ' + err}));
@@ -119,14 +104,13 @@ exports.deletePublication = (req, res) => {
 }
 
 exports.getAllPublications = (req, res) => {
+    // Pagination
     const pageAsNumber = parseInt(req.query.page);
     const sizeAsNumber = parseInt(req.query.size);
-
     let page = 0;
     if(!isNaN(pageAsNumber) && pageAsNumber > 0) {
         page = pageAsNumber;
     }
-
     let size = 5;
     if(!isNaN(sizeAsNumber) && sizeAsNumber > 0 && sizeAsNumber < 5) {
         size = sizeAsNumber;
@@ -151,8 +135,6 @@ exports.getAllPublications = (req, res) => {
         offset: page * size
     })
     .then(publications => {
-        console.log(publications.rows.length);
-        console.log(publications);
         if(publications.rows.length === 0) {
           return res.status(404).json({error: 'No publications !'});
         }

@@ -11,7 +11,7 @@ schema
     .has().lowercase()                              // Must have lowercase letters
     .has().digits(1)                                // Must have at least 1 digits
     .has().not().spaces()                           // Should not have spaces
-    .is().not().oneOf(['Passw0rd', 'Password123', 'mdp123', 'azerty123']); // Blacklist these values
+    .is().not().oneOf(['mdp123']); // Blacklist these values
 
 module.exports = (req, res, next) => {
     if (!schema.validate(req.body.password)) {

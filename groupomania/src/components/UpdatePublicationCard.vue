@@ -16,7 +16,7 @@
                           <text-field />
                           <label
                             for="publication_file_update"
-                            class="btn btn-outline-info border-none rounded-circle"
+                            class="btn btn-outline-info border-none rounded-circle input_label"
                             aria-label="Choisir une image">
                               <i class="fas fa-images"></i>
                               <input
@@ -27,9 +27,11 @@
                               @change="getImageFile">
                           </label>
                       </div>
-                      opssss
                   </form>
                   {{ fileName }}
+                </div>
+                <div class="alert alert-info" role="alert">
+                  Modification et suppression de la publication pas encore disponible...
                 </div>
                 <div class="modal-footer">
                   <button type="button" @click="deletePublication" class="btn btn-outline-danger">
@@ -102,4 +104,7 @@ export default {
 </script>
 
 <style scoped>
+.input_label {
+  max-height: 40px;
+}
 </style>

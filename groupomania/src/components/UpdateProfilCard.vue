@@ -41,6 +41,9 @@
             Modifier</button>
         </span>
     </form>
+    <span class="mt-3" v-if="statusPut === 200">Profil modifié ! 🌞</span>
+    <span class="mt-3" v-else-if="errorPut">Modification du profil impossible 😥</span>
+    <div class="alert alert-info mt-3">Pré visualisation de l'image impossible mais changement opérationnel</div>
   </div>
 </template>
 
@@ -78,15 +81,7 @@ export default {
     const imagePreviewUrl = ref('');
     function pickNewPicture(event) {
       const file = event.target.files[0];
-      if (file) {
-        infosUpdated.imageUrl = file;
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          imagePreviewUrl.value = e.target.result;
-        };
-        reader.readAsDataURL(event.target.files[0]);
-        console.log(imagePreviewUrl);
-      }
+      infosUpdated.imageUrl = file;
     }
     const formData = new FormData();
     formData.append('userId', userIdRegistered.value);
@@ -103,9 +98,9 @@ export default {
       status: statusPut, data: dataPut, error: errorPut, loading: loadingPut, fetch: fetchPut,
     } = useFetchPut(`users/${userIdRegistered.value}`, formData, formDataAuthHeaders);
     const updateProfil = async () => {
-      console.log(infosUpdated);
       fetchPut();
       console.log(dataPut);
+      router.go(0);
     };
     // DELETE PROFIL
     // Choose request headers and get back reactives data and fetchDelete function
@@ -115,7 +110,6 @@ export default {
     // After confirmation, delete profil, clean localStorage and logout user (expect for Admin)
     function deleteProfil() {
       if (window.confirm('Etes-vous sur de vouloir supprimer ce compte ?')) {
-        console.log(isAdmin.value);
         if (isAdmin.value && userId.value !== userIdRegistered.value) {
           fetchDelete(userId.value);
           router.push('/accueil');
@@ -123,11 +117,10 @@ export default {
           localStorage.removeItem('xsrfToken');
           localStorage.removeItem('userRegistered');
           fetchDelete(userId.value);
-          router.push('/');
+          router.push('/connexion');
         }
       }
     }
-    const validationMessage = ref('');
     return {
       updateProfil,
       pickNewPicture,
@@ -141,7 +134,6 @@ export default {
       errorDelete,
       loadingDelete,
       fetchDelete,
-      validationMessage,
       userIdRegistered,
       isAdmin,
       userId,

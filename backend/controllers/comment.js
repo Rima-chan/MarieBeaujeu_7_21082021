@@ -1,15 +1,12 @@
-const models = require('../models');
 const User = require('../models/index').User;
 const Publication = require('../models/index').Publication;
 const Comment = require('../models/index').Comment;
-const jwtUtils = require('../utils/jwt.utils');
 const jwt = require('jsonwebtoken');
-const asyncLib = require('async');
-const fs = require('fs');
 
 exports.createNewComment = (req, res) => {
     const publicationId = parseInt(req.params.publicationId);
     const content = req.body.content;
+    // Check inputs
     if (content === '' || !publicationId) {
         return res.status(400).json({error: 'Missing parameters'});
     }
@@ -52,11 +49,9 @@ exports.updateComment = (req, res) => {
     const commentId = parseInt(req.params.commentId);
     const publicationId = parseInt(req.params.publicationId);
     const newContent = req.body.content;
-    // const headAuthorization = req.headers.authorization;
-    // const userToken = jwtUtils.getUserToken(headAuthorization);
-
     const cookie = req.headers.cookie;
     const access_token = cookie.split('=')[1];
+    // Check user access
     if (!cookie  || !access_token) {
         return res.status(401).json({error: 'Missing token in cookie'});
     }
@@ -81,10 +76,9 @@ exports.updateComment = (req, res) => {
 exports.deleteOneComment = (req, res) => {
     const commentId = parseInt(req.params.commentId);
     const publicationId = parseInt(req.params.publicationId);
-    // const headAuthorization = req.headers.authorization;
-    // const userToken = jwtUtils.getUserToken(headAuthorization);
     const cookie = req.headers.cookie;
     const access_token = cookie.split('=')[1];
+    // Check user access
     if (!cookie  || !access_token) {
         return res.status(401).json({error: 'Missing token in cookie'});
     }
@@ -112,11 +106,12 @@ exports.getAllComments = (req, res) => {
     const sizeAsNumber = parseInt(req.query.size);
     const publicationId = parseInt(req.params.publicationId);
 
+    //Pagination
     let size = 10;
     if(!isNaN(sizeAsNumber) && sizeAsNumber > 0 && sizeAsNumber < 10) {
         size = sizeAsNumber;
     }
-    
+
     Comment.findAndCountAll({
         include: [{
             model: User,

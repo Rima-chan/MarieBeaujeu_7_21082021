@@ -1,5 +1,5 @@
 <template>
-    <div class="card col-lg-6">
+    <div class="card flex-grow-1 align-self-center">
         <div class="card-body shadow-sm pb-0">
           <div class="row">
             <h5 class="card-title col-12 text-start border-bottom pb-2">Créer une publication &#128512;</h5>
@@ -10,21 +10,23 @@
                 <img src="http://localhost:3000/images/avatar_user.png" width="40" height="40" class="img-fluid rounded-circle" alt="Logo du profil">
               </span>
             </div>
-            <div class="col-12 d-flex flex-column justify-content-center px-3">
+            <div class="d-flex flex-column px-2">
                 <form @submit.prevent method="post" enctype="multipart/form-data">
-                  <div class="order-sm-1">
+                  <div class="order-sm-1 flex-grow-1">
                     <text-field v-model="title"/>
                   </div>
-                    <input-file-field @getImageFile="displayImagePreview" :inputFieldId="new_publication_file" />
-                  <img :src="imagePreviewUrl" alt="" id="image" class="img-fluid">
-                  <div class="col-12 d-inline-flex justify-content-between align-items-center mt-2">
-                    <span class="col-5">
-                      <span v-if="validationMessage">{{ validationMessage }}</span>
-                    </span>
-                    <button type="submit" @click="submitted" class="btn btn-outline-success float-end rounded-pill">Publier</button>
-                  </div>
-               </form>
+                  <img v-if="imagePreviewUrl" :src="imagePreviewUrl" alt="" id="image" class="img-fluid">
+                  <div class="d-flex justify-content-between mt-3">
+                    <div class="order-sm-2">
+                      <input-file-field @getImageFile="displayImagePreview" />
+                    </div>
+                    <div class="order-sm-3">
+                      <button type="submit" @click="submitted" class="btn btn-outline-success float-end rounded-pill">Publier</button>
+                    </div>
+                    </div>
+                </form>
             </div>
+            <span class="mt-3" v-if="validationMessage">{{ validationMessage }}</span>
           </div>
           <error-display :isError="status && status != 201" :status="status" :error="errorMessage" />
         </div>
@@ -36,7 +38,6 @@ import {
   ref,
   watch,
   inject,
-  computed,
 } from 'vue';
 import { useRouter } from 'vue-router';
 // import { computed } from '@vue/runtime-core';
@@ -65,8 +66,6 @@ export default {
     const {
       userId: userIdRegistered,
     } = useUserInfos();
-    //
-    const pseudo = computed(() => (store.userState.userInfos.username));
     // Display image input
     function displayImagePreview(file) {
       imagePreviewUrl.value = URL.createObjectURL(file);
@@ -95,17 +94,16 @@ export default {
       if (value === 201) {
         imagePreviewUrl.value = '';
         title.value = '';
-        validationMessage.value = 'Message publié !🌞';
+        validationMessage.value = 'Message publié ! 🌞';
         router.go(0);
       } else {
         imagePreviewUrl.value = '';
         title.value = '';
-        errorMessage.value = 'Désolé nous n\'avons pas pu poster votre message 😥';
+        errorMessage.value = 'Il faut un titre et une image pour poster une publication 🤷';
       }
     });
     return {
       store,
-      pseudo,
       userIdRegistered,
       displayImagePreview,
       imagePreviewUrl,

@@ -12,7 +12,7 @@
                 <router-link to="/accueil" aria-current="page" class="nav-link">Accueil</router-link>
                 <router-link to="/publications" class="nav-link">9Gag'mania</router-link>
                 <router-link :to="{ name: 'Profil', params: { userId: userIdRegistered }}" class="nav-link">Mon profil</router-link>
-                <h6 @click="validateLogout" class="nav-link pointer">Déconnexion</h6>
+                <h6 @click="validateLogout" class="nav-link pointer mb-0">Déconnexion</h6>
             </div>
             </div>
         </div>

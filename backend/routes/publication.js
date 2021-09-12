@@ -4,7 +4,6 @@ const publicationCtrl = require('../controllers/publication');
 const auth = require('../middleware/auth');
 const multer = require('../middleware/multer-config');
 
-
 router.post('/', auth, multer, publicationCtrl.createNewPublication);
 router.put('/:id', auth, multer, publicationCtrl.updatePublication);
 router.delete('/:id', auth, publicationCtrl.deletePublication);

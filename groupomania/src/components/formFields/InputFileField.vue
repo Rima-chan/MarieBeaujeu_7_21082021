@@ -17,17 +17,11 @@
 </template>
 
 <script>
-import { ref, toRefs } from '@vue/runtime-core';
 
 // TODO : faut-il réduire le type de fihcier img acccepté (jpg, png, jpeg, gif)
 export default {
   name: 'InputFileField',
-  props: {
-    inputFieldId: String, // ajouter required ?
-  },
   setup(props, context) {
-    const { inputFieldId } = toRefs(props);
-    const inputId = ref(inputFieldId.value);
     function onFilePicked(event) {
       // TODO : ajouter des règles de vérifications (Si file alors.., longueur, poids...)
       const file = event.target.files[0];
@@ -37,7 +31,6 @@ export default {
     }
     return {
       onFilePicked,
-      inputId,
     };
   },
 };

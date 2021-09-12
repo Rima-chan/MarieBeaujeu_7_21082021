@@ -5,31 +5,25 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const User = require('../models/index').User;
 const asyncLib = require('async');
-const jwtUtils = require('../utils/jwt.utils');
 const fs = require('fs');
 
-// Constants 
 const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const PASSWORD_REGEX = /^(?=.*\d).{4,8}$/;
 const SALT_ROUNDS = 10;
 
-// Functions  
 exports.signup = (req,res) => {
     const email = req.body.email;
     const password = req.body.password;
     const username = req.body.username;
     const service = req.body.service;
     const imageUrl = `${req.protocol}://${req.get('host')}/images/avatar_user.png`;
-
+    // Check inputs
     if (email === '' || username === '' || password === '') {
         return res.status(400).json({'error' : 'Missing parameters'});
     }
-
-    // Check parameters conformity
     if (username.length >= 13 || username.length < 3){
         return res.status(400).json({'error': 'Le pseudo doit avoir entre 3 et 12 charactères'});
     }
-
     if (!EMAIL_REGEX.test(email)) {
         return res.status(400).json({'error': 'email is not valid'});
     }
@@ -81,7 +75,7 @@ exports.signup = (req,res) => {
 exports.login = (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
-
+    // Check inputs
     if (email === '' || password === ''){
         return res.status(400).json({error: 'missing parameters'});
     }
@@ -132,7 +126,7 @@ exports.login = (req, res) => {
         );
         res.cookie('access_token', accessToken, {
             httpOnly: true,
-            maxAge: 10800000,
+            maxAge: 300000,
             // "Secure: true" with https for production
         });
         return res.status(200).json({
@@ -172,10 +166,14 @@ exports.updateProfilInfos = (req, res) => {
     const imageUrl = req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null;
     const cookie = req.headers.cookie;
     const access_token = cookie.split('=')[1];
+    // Check user access and inputs
+    if (!username && !imageUrl && !service) {
+        return res.status(400).json({error: 'Missing parameters'});
+    }
     if (!cookie  || !access_token) {
         return res.status(401).json({error: 'Missing token in cookie'});
     }
-    console.log(username);
+    // Find user and update profil
     if (userId === parseInt(req.user.id, 10)) {
         User.findOne({where: {id: req.user.id}})
             .then(userFound => {
@@ -198,22 +196,16 @@ exports.updateProfilInfos = (req, res) => {
         return res.status(401).json({error: 'Unauthorized request'});
     }
 }
- 
-// Est-ce qu'on envoie l'id dans le body ? Ou celui du token suffit ?
-// Si Admin l'id sera différent et le middleware d'auth va stopper le process
 
 exports.deleteUser = (req, res) => {
     const userIdToDelete = req.params.id;
-    // const headAuthorization = req.headers.authorization;
-    // const userToken = jwtUtils.getUserToken(headAuthorization);
-    console.log(req.user);
     const cookie = req.headers.cookie;
     const access_token = cookie.split('=')[1];
+    // Chekc authorizations : isAdmin and/or correct user
     if (!cookie  || !access_token) {
         return res.status(401).json({error: 'Missing token in cookie'});
     }
     const decodedToken = jwt.verify(access_token, process.env.DB_TOKEN);
-
     User.findOne({where: {id: userIdToDelete}})
         .then(userFound => {
             if (userFound.id === decodedToken.userId || decodedToken.isAdmin) {
@@ -225,7 +217,6 @@ exports.deleteUser = (req, res) => {
                     }
                 User.destroy({
                     where: {id: userIdToDelete},
-                    // force: true // A enlever pour la production car permet de garder en mémoire les users
                 })
                     .then(() => res.status(200).json({message: 'User deleted'}))
                     .catch(err => res.status(400).json({error: 'Cannot delet user : ' + err}));
@@ -239,17 +230,15 @@ exports.deleteUser = (req, res) => {
 exports.getAllUsers = (req, res) => {
     const pageAsNumber = parseInt(req.query.page);
     const sizeAsNumber = parseInt(req.query.size);
-
+    // Pagination
     let page = 0;
     if(!isNaN(pageAsNumber) && pageAsNumber > 0) {
         page = pageAsNumber;
     }
-
-    let size = 5;
-    if(!isNaN(sizeAsNumber) && sizeAsNumber > 0 && sizeAsNumber < 5) {
+    let size = 10;
+    if(!isNaN(sizeAsNumber) && sizeAsNumber > 0 && sizeAsNumber < 10) {
         size = sizeAsNumber;
     }
-    
     User.findAndCountAll({
         attributes: ['id', 'username', 'service', 'imageUrl'],
         limit: size,

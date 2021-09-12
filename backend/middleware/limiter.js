@@ -12,7 +12,6 @@ const createAccountLimiter = rateLimit({
         "Too many accounts created from this IP, please try again after an hour"
 });
 
-// Voir si on peut pas mettre interval progressifs entre chaque connexion ?
 const connexionAccountLimiter = rateLimit({
     windowMs: 30000,
     max: 3,

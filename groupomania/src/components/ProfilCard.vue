@@ -1,5 +1,5 @@
 <template>
-    <div class="row d-flex justify-content-center my-5">
+    <div class="row d-flex justify-content-center my-5 mx-1">
       <div v-if="!error" class="col-sm-6 col-md-4 d-flex flex-column">
         <div class="card">
           <div class="align-self-center rounded-circle bg-light shadow-sm border-info logo_profil my-3">

@@ -7,6 +7,8 @@ module.exports = async (req, res, next) => {
         const headers = req.headers;
         const cookie = req.headers.cookie;
         const access_token = cookie.split('=')[1];
+        // JWT store in cookie header
+        // XSRF token from Login function store in localStorage (part of JWT payload)
         if (!cookie  || !access_token) {
             return res.status(401).json({error: 'Missing token in cookie'});
         }
@@ -19,7 +21,6 @@ module.exports = async (req, res, next) => {
             return res.status(401).json({error: 'Bad XSRF token'});
         }
         const userId = decodedToken.userId;
-        const userToCheck = req.body.userId;
         const user = await User.findOne({ where: {id: userId}});
         if (!user) {
           return res.status(401).json({error: 'User not exists'});

@@ -3,7 +3,7 @@
         <label for="publication_title" class="hidden">Ecrivez un titre pour votre publication : </label>
         <textarea
           id="publication_title"
-          rows="2"
+          rows="3"
           wrap="hard"
           required
           max-length="255"

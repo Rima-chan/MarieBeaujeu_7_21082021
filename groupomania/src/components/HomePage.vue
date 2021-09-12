@@ -16,7 +16,7 @@ export default {
   name: 'HomePage',
   setup() {
     const store = inject('store');
-    const welcome = computed(() => (store.userState ? `Bienvenue ${store.userState.userInfos.username} 👋` : 'Bienvenue 👋'));
+    const welcome = computed(() => (store.userState?.value ? `Bienvenue ${store.userState.userInfos.username} 👋` : 'Bienvenue 👋'));
     return {
       store,
       welcome,
