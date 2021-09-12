@@ -2,6 +2,7 @@ require('dotenv').config();
 const User = require('../models/index').User;
 const Publication = require('../models/index').Publication;
 const Comment = require('../models/index').Comment;
+const jwt = require('jsonwebtoken');
 const fs = require('fs');
 
 exports.createNewPublication = (req, res) => {
@@ -47,11 +48,12 @@ exports.updatePublication = (req, res) => {
         return res.status(401).json({error: 'Missing token in cookie'});
     }
     const decodedToken = jwt.verify(access_token, process.env.DB_TOKEN);
+    const userTokenId = parseInt(decodedToken, 10);
 
-    if (decodedToken.userId === userId) {
+    if (userTokenId === userId) {
         Publication.findOne({where: {id: publicationId}})
             .then(publication => {
-                if (decodedToken.userId != publication.UserId) {
+                if (userTokenId != publication.UserId) {
                     return res.status(403).json({error: 'Unauthorized user'});
                 } else {
                     if (imageUrl != null) {

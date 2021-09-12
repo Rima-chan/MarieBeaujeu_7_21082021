@@ -23,7 +23,7 @@ export default function useFetchPut(ApiName, dataToSend, config) {
       result.xsrfToken = response.data.xsrfToken;
       result.status = response.status;
     } catch (e) {
-      result.error = e.response.data.error;
+      result.error = e.response.data.error ? e.response.data.error : e;
       result.status = e.response.status;
     } finally {
       result.loading = false;
