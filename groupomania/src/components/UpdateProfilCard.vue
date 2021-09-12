@@ -1,13 +1,16 @@
 <template>
   <div>
-    <form @submit.prevent method="post" enctype="multipart/form-data">
+    <form @submit.prevent enctype="multipart/form-data">
         <username-field
           v-if="userId === userIdRegistered"
-          v-model="username" />
+          v-model="infosUpdated.username" />
         <service-field
           v-if="userId === userIdRegistered"
-          v-model="service" />
+          v-model="infosUpdated.service" />
         <span>
+          <div class="image_preview_container align-self-center">
+            <img :src="imagePreviewUrl" v-if="imagePreviewUrl" alt="Nouvelle photo de profil" id="image" width="200" class="img-fluid rounded-circle image_preview">
+          </div>
         <label
           for="updateProfilPicture"
           class="btn btn-outline-info border-none rounded-circle"
@@ -43,7 +46,7 @@
 
 <script>
 import { useRoute, useRouter } from 'vue-router';
-import { ref, reactive } from '@vue/runtime-core';
+import { ref, reactive, watch } from '@vue/runtime-core';
 import ServiceField from './formFields/ServiceField.vue';
 import UsernameField from './formFields/UsernameField.vue';
 import useAxiosHeaders from '../composables/useAxiosHeaders';
@@ -54,7 +57,7 @@ import useUserInfos from '../composables/useUserInfos';
 export default {
   components: { UsernameField, ServiceField },
   name: 'UpdateProfilCard',
-  setup(props, context) {
+  setup() {
     // Handle page redirection
     const route = useRoute();
     const router = useRouter();
@@ -72,29 +75,42 @@ export default {
       service: '',
       imageUrl: '',
     });
-    const imageFile = ref('');
+    const imagePreviewUrl = ref('');
     function pickNewPicture(event) {
-      console.log('Helo');
-      console.log(event);
       const file = event.target.files[0];
-      console.log(file);
-      // TODO : ajouter des règles de vérifications (Si file alors.., longueur, poids...)
       if (file) {
-        imageFile.value = file;
-        console.log(imageFile.value);
-        context.emit('getImageProfilFile', file);
+        infosUpdated.imageUrl = file;
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          imagePreviewUrl.value = e.target.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+        console.log(imagePreviewUrl);
       }
     }
+    const formData = new FormData();
+    formData.append('userId', userIdRegistered.value);
+    watch(() => infosUpdated.imageUrl, (image) => {
+      formData.append('imageUrl', image);
+    });
+    watch(() => infosUpdated.service, (service) => {
+      formData.set('service', service);
+    });
+    watch(() => infosUpdated.username, (username) => {
+      formData.set('username', username);
+    });
     const {
       status: statusPut, data: dataPut, error: errorPut, loading: loadingPut, fetch: fetchPut,
-    } = useFetchPut(`users/${userId.value}`, infosUpdated, formDataAuthHeaders);
+    } = useFetchPut(`users/${userIdRegistered.value}`, formData, formDataAuthHeaders);
     const updateProfil = async () => {
       console.log(infosUpdated);
+      fetchPut();
+      console.log(dataPut);
     };
     // DELETE PROFIL
     // Choose request headers and get back reactives data and fetchDelete function
     const {
-      status: statusDelete, data: dataDelete, error: errorDelete, loading: loadingDelete, fetch: fetchDelete,
+      status: statusDelete, error: errorDelete, loading: loadingDelete, fetch: fetchDelete,
     } = useFetchDelete('users', authHeaders);
     // After confirmation, delete profil, clean localStorage and logout user (expect for Admin)
     function deleteProfil() {
@@ -122,7 +138,6 @@ export default {
       fetchPut,
       deleteProfil,
       statusDelete,
-      dataDelete,
       errorDelete,
       loadingDelete,
       fetchDelete,
@@ -130,6 +145,8 @@ export default {
       userIdRegistered,
       isAdmin,
       userId,
+      imagePreviewUrl,
+      infosUpdated,
     };
   },
 };

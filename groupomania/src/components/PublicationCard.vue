@@ -14,13 +14,13 @@
               <h6 class="">{{ publication.User.username }}</h6>
               <small class="text-muted">{{ publication.createdAt.substr(0, 10).split("-").reverse().join("-") }}</small>
             </span>
-            <update-publication-button v-if="isAdmin || publication.UserId === userIdRegistered" :content="publication.title" />
+            <update-publication-button :postId="publication.id" v-if="isAdmin || publication.UserId === userIdRegistered" :content="publication.title" />
           </div>
           <p class="card-text">{{ publication.title }}</p>
       </div>
       <img
         :src="publication.attachment"
-        alt="Hey"
+        alt="image publication"
         class="display-block card-img-bottom img-fluid publication_image"
       />
       <comments-display :postId="publication.id" />
@@ -31,6 +31,7 @@
 <script>
 // import { reactive } from '@vue/runtime-core';
 // import { onMounted } from 'vue';
+import { ref } from 'vue';
 import CommentsDisplay from './CommentsDisplay.vue';
 import UpdatePublicationButton from './UpdatePublicationCard.vue';
 import useFetchGet from '../composables/useFetchGet';
@@ -41,7 +42,6 @@ export default {
   components: { CommentsDisplay, UpdatePublicationButton },
   name: 'PublicationCard',
   setup() {
-    let errorMessage;
     // Authentificated user infos
     const {
       userId: userIdRegistered, isAdmin,
@@ -53,6 +53,7 @@ export default {
     } = useFetchGet('publications', authHeaders);
     //   errorMessage = 'Aucunes publications recentes... 😴';
     //   errorMessage = 'La page demandée n\'existe pas 🤷‍♀️';
+    const publicationId = ref('');
     return {
       userIdRegistered,
       isAdmin,
@@ -60,7 +61,7 @@ export default {
       data,
       error,
       loading,
-      errorMessage,
+      publicationId,
     };
   },
 };

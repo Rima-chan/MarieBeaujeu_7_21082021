@@ -17,7 +17,7 @@ export default function useFetchPut(ApiName, dataToSend, config) {
   // Stock fetch result data in the reactive object created above
   const fetch = async () => {
     try {
-      const response = await axios.post(url, dataToSend, config);
+      const response = await axios.put(url, dataToSend, config);
       result.response = response;
       result.data = response.data;
       result.xsrfToken = response.data.xsrfToken;

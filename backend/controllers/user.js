@@ -168,21 +168,15 @@ exports.updateProfilInfos = (req, res) => {
     const userId = parseInt(req.body.userId);
     const username = req.body.username;
     const service = req.body.service;
-    const imageUrl = req.file ? `${req.protocol}://${req.get('host')}/backend/images/${req.file.filename}` : null;
-    
-    // To check if correct user
-    // const headAuthorization = req.headers.authorization;
-    // const userToken = jwtUtils.getUserToken(headAuthorization);
-
+    const imageUrl = req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null;
     const cookie = req.headers.cookie;
     const access_token = cookie.split('=')[1];
     if (!cookie  || !access_token) {
         return res.status(401).json({error: 'Missing token in cookie'});
     }
-    const decodedToken = jwt.verify(access_token, process.env.DB_TOKEN);
-
-    if (userId === decodedToken.userId) {
-        User.findOne({where: {id: decodedToken.userId}})
+    console.log(username);
+    if (userId === parseInt(req.user.id, 10)) {
+        User.findOne({where: {id: req.user.id}})
             .then(userFound => {
                 if (imageUrl != null) {
                     const filename = userFound.imageUrl.split('/images/')[1];
@@ -193,7 +187,7 @@ exports.updateProfilInfos = (req, res) => {
                     }
                     userFound.imageUrl = imageUrl;
                 }
-                userFound.userName = (username ? username: userFound.userName);
+                userFound.username = (username ? username: userFound.userName);
                 userFound.service = (service ? service: userFound.service);
                 userFound.save();
                 return res.status(200).json({'message' : 'Profil successfully updated'});

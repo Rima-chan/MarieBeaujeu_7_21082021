@@ -24,14 +24,15 @@
                               id="publication_file_update"
                               style="display:none"
                               accept="image/*"
-                              @change="onFilePicked">
+                              @change="getImageFile">
                           </label>
                       </div>
+                      opssss
                   </form>
-                  <img :src="displayImagePreview" alt="" id="image" class="img-fluid">
+                  {{ fileName }}
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-outline-danger">
+                  <button type="button" @click="deletePublication" class="btn btn-outline-danger">
                       <i class="fas fa-trash-alt"></i>
                   </button>
                   <button type="submit" @click="submitted" class="btn btn-outline-success">Modifier</button>
@@ -43,32 +44,58 @@
 </template>
 
 <script>
-import { toRefs, ref } from '@vue/runtime-core';
-import { onBeforeMount } from 'vue';
+import { ref, toRefs } from '@vue/runtime-core';
 import TextField from './formFields/TextField.vue';
+import useFetchDelete from '../composables/useFetchDelete';
+import useUserInfos from '../composables/useUserInfos';
+import useAxiosHeader from '../composables/useAxiosHeaders';
 
 export default {
   components: { TextField },
   name: 'UpdatePublicationCard',
   props: {
-    formerImage: String,
-    content: String,
+    postId: Number,
   },
   setup(props) {
     const imageUrl = ref('');
-    onBeforeMount(() => {
-      const { publication } = toRefs(props);
-      imageUrl.value = publication;
-    });
-    const imageFile = ref('');
-    function displayImagePreview(file) {
-      imageUrl.value = URL.createObjectURL(file);
-      imageFile.value = file;
+    const fileName = ref('');
+    function getImageFile(event) {
+      const file = event.target.files[0];
+      if (file) {
+        fileName.value = file.name;
+      }
+      imageUrl.value = file;
+    }
+    // Authentificated user infos
+    const {
+      userId: userIdRegistered, isAdmin,
+    } = useUserInfos();
+    // Requestes headers
+    const { authHeaders } = useAxiosHeader();
+    // DELETE publication
+    const { postId } = toRefs(props);
+    console.log(postId);
+    const {
+      status: statusDelete, error: errorDelete, loading: loadingDelete, fetch: fetchDelete,
+    } = useFetchDelete('users', authHeaders);
+    function deletePublication() {
+      console.log(postId.value);
+      // if (window.confirm('Etes-vous sur de vouloir supprimer cette publication ?')) {
+      //   fetchDelete(parseInt(postId.value, 10));
+      //   // router.push('/publications');
+      // }
     }
     return {
-      props,
+      fileName,
       imageUrl,
-      displayImagePreview,
+      getImageFile,
+      userIdRegistered,
+      isAdmin,
+      deletePublication,
+      statusDelete,
+      errorDelete,
+      loadingDelete,
+      fetchDelete,
     };
   },
 };

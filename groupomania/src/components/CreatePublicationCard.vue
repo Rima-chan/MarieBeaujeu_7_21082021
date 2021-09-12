@@ -18,7 +18,7 @@
                       <text-field v-model="title"/>
                       <input-file-field @getImageFile="displayImagePreview" :inputFieldId="new_publication_file" />
                   </div>
-                  <img :src="imagePreviewUrl" alt="" id="image" style="width:100%" class="img-fluid">
+                  <img :src="imagePreviewUrl" alt="" id="image" class="img-fluid">
                   <div class="col-12 d-inline-flex justify-content-between align-items-center mt-2">
                     <span class="col-5">
                       <span v-if="validationMessage">{{ validationMessage }}</span>
@@ -67,7 +67,7 @@ export default {
       imagePreviewUrl.value = URL.createObjectURL(file);
       imageFile.value = file;
     }
-    // Create form data which will sent to backend
+    // Create form data which will be sent to backend
     const formData = new FormData();
     formData.append('userId', userIdRegistered.value);
     watch(() => imageFile.value, (imageValue) => {
