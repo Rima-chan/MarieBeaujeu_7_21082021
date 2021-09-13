@@ -12,8 +12,9 @@
             <img :src="imagePreviewUrl" v-if="imagePreviewUrl" alt="Nouvelle photo de profil" id="image" width="200" class="img-fluid rounded-circle image_preview">
           </div>
         <label
+          v-if="userId === userIdRegistered"
           for="updateProfilPicture"
-          class="btn btn-outline-info border-none rounded-circle"
+          class="btn btn-secondary border-none rounded bg-dark-blue"
           aria-label="Choisir une nouvelle image de profil">
             <i class="fas fa-images"></i>
             <input
@@ -22,14 +23,15 @@
              style="display:none"
              accept="image/*"
              @change="pickNewPicture" >
+             Image
         </label>
-        <!-- <img :src="imagePreviewSrc" alt="" id="image" style="width:100%"> -->
         </span>
         <span class="d-inline-flex justify-content-end mt-3 mb-2">
           <button
             v-if="userId === userIdRegistered || isAdmin"
             @click="deleteProfil"
             type="button"
+            aria-label="Supprimer le profil"
             class="btn btn-outline-danger mx-3" id="deleteProfilButton">
             <i class="fas fa-trash-alt"></i>
           </button>
@@ -37,7 +39,8 @@
             v-if="userId === userIdRegistered"
             type="submit"
             @click="updateProfil"
-            class="btn btn-outline-success float-end rounded-pill">
+            aria-label="Modifier le profil"
+            class="btn btn-outline-success float-end rounded">
             Modifier</button>
         </span>
     </form>
@@ -102,7 +105,7 @@ export default {
       if (infosUpdated.imageUrl) {
         // Change picture profil store in LS
       }
-      // router.go(0);
+      router.go(0);
     };
     // DELETE PROFIL
     // Choose request headers and get back reactives data and fetchDelete function
@@ -147,8 +150,11 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .image_preview {
   max-width: 200px;
+}
+.bg-dark-blue {
+  background-color: #162948;
 }
 </style>

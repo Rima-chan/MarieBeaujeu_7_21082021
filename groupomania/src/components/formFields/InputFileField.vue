@@ -2,7 +2,7 @@
     <span>
         <label
           for="publicationInput"
-          class="btn btn-outline-info border-none rounded-circle publication_input"
+          class="btn btn-secondary bg-dark-blue publication_input"
           aria-label="Choisir une image">
             <i class="fas fa-images"></i>
             <input
@@ -11,6 +11,7 @@
              style="display:none"
              accept="image/*"
              @change="onFilePicked">
+            Image
         </label>
         <!-- <img :src="imagePreviewSrc" alt="" id="image" style="width:100%"> -->
     </span>
@@ -47,5 +48,8 @@ export default {
 }
 .publication_input {
   max-width: 500px;
+}
+.bg-dark-blue {
+  background-color: #162948;
 }
 </style>

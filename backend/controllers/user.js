@@ -55,7 +55,7 @@ exports.signup = (req,res) => {
                 password: hash,
                 service: service,
                 imageUrl: imageUrl,
-                isAdmin: true,
+                isAdmin: false,
             })
             .then(newUser => {
                 done(newUser);
@@ -122,11 +122,11 @@ exports.login = (req, res) => {
             xsrfToken: xsrfToken,
             },
             process.env.DB_TOKEN,
-            {expiresIn: '2h'}
+            {expiresIn: '5h'}
         );
         res.cookie('access_token', accessToken, {
             httpOnly: true,
-            maxAge: 300000,
+            maxAge: 300000000000,
             // "Secure: true" with https for production
         });
         return res.status(200).json({

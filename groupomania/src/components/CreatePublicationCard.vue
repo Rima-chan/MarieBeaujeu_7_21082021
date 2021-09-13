@@ -2,7 +2,7 @@
     <div class="card flex-grow-1 align-self-center">
         <div class="card-body shadow-sm pb-0">
           <div class="row">
-            <h5 class="card-title col-12 text-start border-bottom pb-2">Créer une publication &#128512;</h5>
+            <h2 class="h5 card-title col-12 text-start border-bottom pb-2">Créer une publication &#128512;</h2>
           </div>
           <div class="row mb-3">
             <div class="col-12 d-inline-flex align-items-center mb-3 px-3">
@@ -16,7 +16,7 @@
             <div class="d-flex flex-column px-2">
                 <form @submit.prevent method="post" enctype="multipart/form-data">
                   <div class="order-sm-1 flex-grow-1">
-                    <text-field v-model="title"/>
+                    <text-field v-model="title" :inputId="timeStamp"/>
                   </div>
                   <img v-if="imagePreviewUrl" :src="imagePreviewUrl" alt="" id="image" class="img-fluid">
                   <div class="d-flex justify-content-between mt-3 px-2">
@@ -24,7 +24,7 @@
                       <input-file-field @getImageFile="displayImagePreview" />
                     </div>
                     <div class="order-sm-3">
-                      <button type="submit" @click="submitted" class="btn btn-outline-success float-end rounded-pill">Publier</button>
+                      <button type="submit" @click="submitted" class="btn btn-outline-success float-end rounded-pill" aria-label="Publier">Publier</button>
                     </div>
                     </div>
                 </form>
@@ -43,7 +43,7 @@ import {
   inject,
 } from 'vue';
 import { useRouter } from 'vue-router';
-// import { computed } from '@vue/runtime-core';
+import { computed } from '@vue/runtime-core';
 // import { reactive } from '@vue/runtime-core';
 import InputFileField from './formFields/InputFileField.vue';
 import TextField from './formFields/TextField.vue';
@@ -85,6 +85,8 @@ export default {
       formData.set('title', titleValue);
     });
     // CREATE publication
+    // timeStamp to give unique id to html input/label
+    const timeStamp = computed(() => Date.now());
     const { formDataAuthHeaders } = useAxiosHeaders();
     const {
       status, data, error, loading, fetch,
@@ -102,7 +104,7 @@ export default {
       } else {
         imagePreviewUrl.value = '';
         title.value = '';
-        errorMessage.value = 'Il faut un titre et une image pour poster une publication 🤷';
+        errorMessage.value = 'Impossible de pposter la publication 🤷';
       }
     });
     return {
@@ -124,6 +126,7 @@ export default {
       data,
       validationMessage,
       errorMessage,
+      timeStamp,
     };
   },
 };

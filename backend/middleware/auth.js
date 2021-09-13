@@ -6,7 +6,7 @@ module.exports = async (req, res, next) => {
     try {
         const headers = req.headers;
         const cookie = req.headers.cookie;
-        const access_token = cookie.split('=')[1];
+        const access_token = cookie ? cookie.split('=')[1] : null;
         // JWT store in cookie header
         // XSRF token from Login function store in localStorage (part of JWT payload)
         if (!cookie  || !access_token) {

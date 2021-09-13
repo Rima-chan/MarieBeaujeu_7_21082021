@@ -15,12 +15,15 @@ VueJS (Composition API), Bootstrap
 
 * Use database servir like __MAMP/WAMP__
 * Create 3 databases : database_development_groupomania / database_test_groupomania / database_production_groupomania 
-* Install sequelize-cli - [More deatils here(https://sequelize.org/master/manual/getting-started.html)]
+* Install sequelize-cli - [More deatils here](https://sequelize.org/master/manual/getting-started.html)
+* Create config.json file - [More details here](https://sequelize.org/master/manual/migrations.html)
 * Run npx sequelize-cli db:migrate to create tables in database
 * Open control terminal in __Backend__ run :
 ` npm install`
 ` npm run or nodemon server`
-* Create `dot env config` to put your keys
+* Create `dot env` to put your keys :
+  * DB_TOKEN
+  * DB_MYSQL_DATABASE_PASS (for config.json)
 
 `npm sequelize`
 `npx sequelize-cli`

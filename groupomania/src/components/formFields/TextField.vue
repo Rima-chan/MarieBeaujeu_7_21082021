@@ -1,8 +1,8 @@
 <template>
     <div class="flex-grow-1 me-2">
-        <label for="publication_title" class="hidden">Ecrivez un titre pour votre publication : </label>
+        <label :for="publicationName" class="sr-only">Ecrivez un titre pour votre publication : </label>
         <textarea
-          id="publication_title"
+          :id="publicationName"
           rows="3"
           wrap="hard"
           required
@@ -15,15 +15,18 @@
 </template>
 
 <script>
+import { toRefs } from 'vue';
 
 export default {
   name: 'TextField',
   props: {
     modelValue: String,
+    inputId: Number,
   },
   setup(props) {
+    const { inputId: publicationName } = toRefs(props);
     return {
-      props,
+      publicationName,
     };
   },
 };

@@ -1,22 +1,22 @@
 <template>
     <div>
-        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#exampleModal" >
+        <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#exampleModal" aria-label="Modifier ou supprimer" >
             <i class="fas fa-ellipsis-h"></i>
         </button>
       <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Modifiez votre publication 🙂</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  <h2 class="h5 modal-title" id="exampleModalLabel">Modifiez votre publication 🙂</h2>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
                 </div>
                 <div class="modal-body">
                     <form @submit.prevent method="post" enctype="multipart/form-data">
                       <div class="d-flex mt-2">
-                          <text-field v-model="publicationUpdated.content" />
+                          <text-field v-model="publicationUpdated.content" :inputId="postId" />
                           <label
                             for="publication_file_update"
-                            class="btn btn-outline-info border-none rounded-circle input_label"
+                            class="btn btn-secondary bg-dark-blue border-none input_label"
                             aria-label="Choisir une image">
                               <i class="fas fa-images"></i>
                               <input
@@ -25,6 +25,7 @@
                               style="display:none"
                               accept="image/*"
                               @change="getImageFile">
+                              Image
                           </label>
                       </div>
                   </form>
@@ -34,7 +35,7 @@
                   Modification de la publication pas encore disponible...
                 </div>
                 <div class="modal-footer">
-                  <button type="button" @click="deletePublication" class="btn btn-outline-danger">
+                  <button type="button" @click="deletePublication" class="btn btn-outline-danger" aria-label="Supprimer la publication">
                       <i class="fas fa-trash-alt"></i>
                   </button>
                   <button type="submit" @click="updatePublication" class="btn btn-outline-success">Modifier</button>
@@ -119,12 +120,6 @@ export default {
           router.go(0);
         }
       });
-      // fetchDelete(postId.value);
-      // console.log(errorDelete);
-      // if (window.confirm('Etes-vous sur de vouloir supprimer cette publication ?')) {
-      //   fetchDelete(parseInt(postId.value, 10));
-      //   // router.push('/publications');
-      // }
     }
     return {
       fileName,
@@ -151,5 +146,8 @@ export default {
 <style scoped>
 .input_label {
   max-height: 40px;
+}
+.bg-dark-blue {
+  background-color: #162948;
 }
 </style>

@@ -8,10 +8,10 @@
       <div class="card-body text-start">
         <div class="card-title d-flex align-items-center">
             <div class="flex-shrink-0">
-              <img :src="publication.User.imageUrl" width="40" height="40" class="img-fluid rounded-circle shadow-sm flex-grow-2" alt="Logo du profil">
+              <img :src="publication.User.imageUrl" width="40" height="40" class="img-fluid rounded-circle shadow-sm flex-grow-2" alt="Image profil publication">
             </div>
             <span class="flex-grow-1 ms-3">
-              <h6 class="">{{ publication.User.username }}</h6>
+              <p class="h6">{{ publication.User.username }}</p>
               <small class="text-muted">Le {{ publication.createdAt.substr(0, 10).split("-").reverse().join("-") }}</small>
             </span>
             <update-publication-button :postId="publication.id" v-if="isAdmin || publication.UserId === userIdRegistered" :content="publication.title" />

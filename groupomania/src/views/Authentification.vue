@@ -1,6 +1,7 @@
 <template>
   <div class="w-100">
     <HeaderAuth />
+    <h1 class="mt-3">Groupoman'net</h1>
     <LoginCard />
     <Footer />
   </div>

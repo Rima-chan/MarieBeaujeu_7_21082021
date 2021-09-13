@@ -63,7 +63,6 @@ export default {
     });
     // Recover props from parent component and declare empty reactive value for futur comment id
     const { postId, commentId: commentIdProps } = toRefs(props);
-    // console.log(commentIdProps);
     result.publicationId = postId.value;
     const commentId = ref(commentIdProps.value);
     // Requests headers

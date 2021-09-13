@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="row d-flex justify-content-center my-5 mx-1">
+    <div class="row d-flex justify-content-center mb-5 mt-3 mx-1">
       <div class="card col col-md-4 p-0">
         <div class="card-body">
           <ul class="nav nav-tabs no-wrap justify-content-center">

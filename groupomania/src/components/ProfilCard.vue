@@ -1,12 +1,12 @@
 <template>
     <div class="row d-flex justify-content-center my-5 mx-1">
-      <div v-if="!error" class="col-sm-6 col-md-4 d-flex flex-column">
+      <div v-if="!error" class="col-sm-8 col-md-6 col-lg-4 d-flex flex-column">
         <div class="card">
           <div class="align-self-center rounded-circle bg-light shadow-sm border-info logo_profil my-3">
            <img :src="data.imageUrl" class="img-fluid card-img-top rounded-circle" alt="Image du profil">
           </div>
           <div class="border-top">
-            <h4 class="fw-bold mt-3">{{ data.username }}</h4>
+            <h1 class="h4 fw-bold mt-3">{{ data.username }}</h1>
             <p class="h-6 m-0">Service {{ data.service }}</p>
             <br>
             <p
@@ -53,7 +53,7 @@ export default {
       status, data, error, loading,
     } = useFetchGet(`users/${userId.value}`, authHeaders);
     if (status.value === 404) {
-      console.log('OK');
+      // Not found error
     }
     function profilNotFound() {
       router.push('/404');
@@ -80,5 +80,4 @@ export default {
 .image_preview_container {
   max-width: 200px;
 }
-
 </style>

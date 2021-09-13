@@ -8,7 +8,6 @@
           @keyup="validateInput"
           class="form-control"
           id="inputEmail"
-          aria-describedby="Aide email"
           placeholder="Exemple@exemple.com"
           required>
         <div v-if="errorMessage" class="invalidField d-inline-flex my-2">{{ errorMessage }}</div>
