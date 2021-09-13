@@ -1,4 +1,4 @@
-<template>
+<template lang="fr">
     <div class="col-12 d-flex flex-column">
         <div
           v-for="comment in dataGet.comments"

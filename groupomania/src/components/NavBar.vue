@@ -1,7 +1,7 @@
 <template>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container p-0">
-            <a class="navbar-brand" href="/">
+            <a class="navbar-brand" href="/accueil">
                 <img src="../assets/logo-left-font-white.png" alt="Groupomania logo" class="img-fluid my-3 logo">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navBarHome" aria-controls="navBarHome" aria-expanded="false" aria-label="Toggle navigation">

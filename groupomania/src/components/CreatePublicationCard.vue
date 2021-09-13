@@ -5,9 +5,12 @@
             <h5 class="card-title col-12 text-start border-bottom pb-2">Créer une publication &#128512;</h5>
           </div>
           <div class="row mb-3">
-            <div class="col-12 d-inline-flex align-items-center mb-2 px-3">
+            <div class="col-12 d-inline-flex align-items-center mb-3 px-3">
               <span class="rounded-circle shadow-sm logo-profil-container me-3">
-                <img src="http://localhost:3000/images/avatar_user.png" width="40" height="40" class="img-fluid rounded-circle" alt="Logo du profil">
+                <img :src="imageProfil" width="40" height="40" class="img-fluid rounded-circle" alt="Logo du profil">
+              </span>
+              <span>
+                {{ username }}
               </span>
             </div>
             <div class="d-flex flex-column px-2">
@@ -16,7 +19,7 @@
                     <text-field v-model="title"/>
                   </div>
                   <img v-if="imagePreviewUrl" :src="imagePreviewUrl" alt="" id="image" class="img-fluid">
-                  <div class="d-flex justify-content-between mt-3">
+                  <div class="d-flex justify-content-between mt-3 px-2">
                     <div class="order-sm-2">
                       <input-file-field @getImageFile="displayImagePreview" />
                     </div>
@@ -64,7 +67,7 @@ export default {
     const title = ref('');
     // Authentificated user infos
     const {
-      userId: userIdRegistered,
+      userId: userIdRegistered, imageProfil, username,
     } = useUserInfos();
     // Display image input
     function displayImagePreview(file) {
@@ -105,6 +108,8 @@ export default {
     return {
       store,
       userIdRegistered,
+      imageProfil,
+      username,
       displayImagePreview,
       imagePreviewUrl,
       formDataAuthHeaders,

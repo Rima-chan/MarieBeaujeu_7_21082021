@@ -3,7 +3,7 @@
     <div class="row d-flex justify-content-center my-5 mx-1">
       <div class="card col col-md-4 p-0">
         <div class="card-body">
-          <ul class="nav nav-tabs justify-content-center">
+          <ul class="nav nav-tabs no-wrap justify-content-center">
             <li class="nav-item">
               <router-link to="/connexion" class="nav-link text-dark px-4">Connexion</router-link>
             </li>

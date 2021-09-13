@@ -7,6 +7,7 @@ export default function useUserInfo() {
     userId: null,
     isAdmin: '',
     imageProfil: null,
+    username: '',
   });
   const userInLocalStorage = JSON.parse(localStorage.getItem('userRegistered'));
   if (!userInLocalStorage) {
@@ -15,6 +16,7 @@ export default function useUserInfo() {
     userRegistered.userId = parseInt(userInLocalStorage.userId, 10);
     userRegistered.isAdmin = userInLocalStorage.isAdmin;
     userRegistered.imageProfil = userInLocalStorage.imageUrl;
+    userRegistered.username = userInLocalStorage.username;
   }
   return {
     ...toRefs(userRegistered),

@@ -1,4 +1,4 @@
-<template>
+<template lang="fr">
     <main class="container">
         <div class="row d-flex flex-column">
             <h1 class="h2 mt-3">Fil d'actualités</h1>

@@ -55,7 +55,7 @@ exports.signup = (req,res) => {
                 password: hash,
                 service: service,
                 imageUrl: imageUrl,
-                isAdmin: false,
+                isAdmin: true,
             })
             .then(newUser => {
                 done(newUser);

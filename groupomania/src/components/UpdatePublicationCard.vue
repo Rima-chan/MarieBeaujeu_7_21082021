@@ -31,7 +31,7 @@
                   {{ fileName }}
                 </div>
                 <div class="alert alert-info" role="alert">
-                  Modification et suppression de la publication pas encore disponible...
+                  Modification de la publication pas encore disponible...
                 </div>
                 <div class="modal-footer">
                   <button type="button" @click="deletePublication" class="btn btn-outline-danger">

@@ -52,7 +52,6 @@ export default {
       status, data, error, loading,
     } = useFetchGet('publications', authHeaders);
     //   errorMessage = 'Aucunes publications recentes... 😴';
-    //   errorMessage = 'La page demandée n\'existe pas 🤷‍♀️';
     const publicationId = ref('');
     return {
       userIdRegistered,

@@ -11,14 +11,17 @@
 
 <script>
 import { computed, inject } from 'vue';
+import useUserInfos from '../composables/useUserInfos';
 
 export default {
   name: 'HomePage',
   setup() {
     const store = inject('store');
-    const welcome = computed(() => (store.userState?.value ? `Bienvenue ${store.userState.userInfos.username} 👋` : 'Bienvenue 👋'));
+    const { username } = useUserInfos();
+    const welcome = computed(() => (username?.value ? `Bienvenue ${username.value} 👋` : 'Bienvenue 👋'));
     return {
       store,
+      username,
       welcome,
     };
   },

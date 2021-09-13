@@ -3,7 +3,7 @@
     <div class="container">
       <div class="row">
         <nav class="navbar navbar-dark bg-dark">
-          <a href="/" class="navbar-brand">
+          <a href="/connexion" class="navbar-brand">
             <img src="../assets/logo-left-font-white.png" alt="Groupomania logo" class="img-fluid my-3 logo">
           </a>
         </nav>

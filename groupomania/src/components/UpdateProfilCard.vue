@@ -43,7 +43,7 @@
     </form>
     <span class="mt-3" v-if="statusPut === 200">Profil modifié ! 🌞</span>
     <span class="mt-3" v-else-if="errorPut">Modification du profil impossible 😥</span>
-    <div class="alert alert-info mt-3">Pré visualisation de l'image impossible mais changement opérationnel</div>
+    <div v-if="userId === userIdRegistered" class="alert alert-info mt-3">Pré visualisation de l'image impossible mais changement opérationnel</div>
   </div>
 </template>
 
@@ -99,7 +99,9 @@ export default {
     } = useFetchPut(`users/${userIdRegistered.value}`, formData, formDataAuthHeaders);
     const updateProfil = async () => {
       fetchPut();
-      console.log(dataPut);
+      if (infosUpdated.imageUrl) {
+        console.log('Image');
+      }
       router.go(0);
     };
     // DELETE PROFIL
