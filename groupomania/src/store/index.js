@@ -11,6 +11,7 @@ const methods = {
     userState.error = null;
     userState.authenticating = true;
     window.localStorage.setItem('userRegistered', JSON.stringify(user)); // Random key for production
+    window.localStorage.setItem('profilPicture', JSON.stringify(userState.userInfos.imageUrl));
     window.localStorage.setItem('xsrfToken', JSON.stringify(userState.userInfos.xsrfToken)); // V2 : Include info in userRegister
   },
   logout() {

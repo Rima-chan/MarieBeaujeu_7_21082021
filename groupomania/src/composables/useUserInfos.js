@@ -8,6 +8,7 @@ export default function useUserInfo() {
     isAdmin: '',
     imageProfil: null,
     username: '',
+    profilPicture: null,
   });
   const userInLocalStorage = JSON.parse(localStorage.getItem('userRegistered'));
   if (!userInLocalStorage) {
@@ -16,6 +17,7 @@ export default function useUserInfo() {
     userRegistered.userId = parseInt(userInLocalStorage.userId, 10);
     userRegistered.isAdmin = userInLocalStorage.isAdmin;
     userRegistered.imageProfil = userInLocalStorage.imageUrl;
+    userRegistered.profilPicture = JSON.parse(localStorage.getItem('profilPicture'));
     userRegistered.username = userInLocalStorage.username;
   }
   return {

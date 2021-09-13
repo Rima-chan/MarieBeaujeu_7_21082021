@@ -66,7 +66,7 @@ export default {
     const router = useRouter();
     // Authentificated user infos
     const {
-      userId: userIdRegistered, isAdmin,
+      userId: userIdRegistered, isAdmin, imageUrl,
     } = useUserInfos();
     // Recover params of user profil to display
     const userId = ref(null);
@@ -100,9 +100,9 @@ export default {
     const updateProfil = async () => {
       fetchPut();
       if (infosUpdated.imageUrl) {
-        console.log('Image');
+        // Change picture profil store in LS
       }
-      router.go(0);
+      // router.go(0);
     };
     // DELETE PROFIL
     // Choose request headers and get back reactives data and fetchDelete function
@@ -139,6 +139,7 @@ export default {
       userIdRegistered,
       isAdmin,
       userId,
+      imageUrl,
       imagePreviewUrl,
       infosUpdated,
     };

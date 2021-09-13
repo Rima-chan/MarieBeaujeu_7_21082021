@@ -135,7 +135,6 @@ exports.login = (req, res) => {
             'isAdmin': userFound.isAdmin,
             'imageUrl': userFound.imageUrl,
             xsrfToken,
-            accessTokenExpiresIn: '8h',
         });
     });
 }
@@ -189,7 +188,10 @@ exports.updateProfilInfos = (req, res) => {
                 userFound.username = (username ? username: userFound.userName);
                 userFound.service = (service ? service: userFound.service);
                 userFound.save();
-                return res.status(200).json({'message' : 'Profil successfully updated'});
+                return res.status(200).json({
+                    'message' : 'Profil successfully updated',
+                    'ProfilPicture': userFound.imageUrl, 
+                });
             })
             .catch(err => res.status(404).json({error: 'User not found : ' + err}));
     } else {
