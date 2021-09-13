@@ -15,13 +15,13 @@
                       <div class="d-flex mt-2">
                           <text-field v-model="publicationUpdated.content" :inputId="postId" />
                           <label
-                            for="publication_file_update"
+                            :for="timeStamp"
                             class="btn btn-secondary bg-dark-blue border-none input_label"
                             aria-label="Choisir une image">
                               <i class="fas fa-images"></i>
                               <input
                               type="file"
-                              id="publication_file_update"
+                              :id="timeStamp"
                               style="display:none"
                               accept="image/*"
                               @change="getImageFile">
@@ -52,6 +52,7 @@ import {
   toRefs,
   watch,
   reactive,
+  computed,
 } from 'vue';
 import { useRouter } from 'vue-router';
 import TextField from './formFields/TextField.vue';
@@ -73,8 +74,6 @@ export default {
       imageUrl: null,
       content: null,
     });
-    // const fileName = ref('');
-    // const title = ref('');
     function getImageFile(event) {
       const file = event.target.files[0];
       if (file) {
@@ -82,6 +81,8 @@ export default {
       }
       publicationUpdated.imageUrl = file;
     }
+    // timeStamp to give unique id to html input/label
+    const timeStamp = computed(() => Date.now());
     // Authentificated user infos
     const {
       userId: userIdRegistered, isAdmin,
@@ -138,6 +139,7 @@ export default {
       errorDelete,
       loadingDelete,
       fetchDelete,
+      timeStamp,
     };
   },
 };
