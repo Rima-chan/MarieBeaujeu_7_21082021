@@ -1,11 +1,14 @@
-# MarieBeaujeu_7_21082021 - Projet Open Classrooms Groupomania
-MVP for corporate social network. 
----------------------------------------------------------
+# Groupomania - OpenClassrooms project #
+
+## Mission ## 
+
+Build the MVP for corporate social network. 
+
 ## OVERVIEW
 ### Backend (MAMP)
 #### Server
 NodeJs, Express, Sequelize (ORM)
-##### Databse
+##### Database
 MySQL
 ### Frontend
 VueJS (Composition API), Bootstrap
@@ -13,7 +16,7 @@ VueJS (Composition API), Bootstrap
 ## INSTALLATION
 ### Backend
 
-* Use database servir like __MAMP/WAMP__
+* Use database server like __MAMP/WAMP__
 * Create 3 databases : database_development_groupomania / database_test_groupomania / database_production_groupomania 
 * Install sequelize-cli - [More deatils here](https://sequelize.org/master/manual/getting-started.html)
 * Create config.json file - [More details here](https://sequelize.org/master/manual/migrations.html)
@@ -33,3 +36,7 @@ VueJS (Composition API), Bootstrap
 * Open control terminal in __Groupomania__ run :
 ` npm install`
 ` npm run serve`
+
+_______________________________________________
+
+![image](https://user-images.githubusercontent.com/77418945/134634455-9b11c3ff-0c25-45d0-8032-672731650540.png) 
